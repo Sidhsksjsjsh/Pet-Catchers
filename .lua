@@ -4,6 +4,7 @@ local T1 = wndw:Tab("Main")
 local T2 = wndw:Tab("Shop")
 local T3 = wndw:Tab("Loading Screen")
 local T4 = wndw:Tab("Unlock & Teleport")
+local T5 = wndw:Tab("Sell & Fishing")
 local self = game.Players.LocalPlayer
 
 local workspace = game:GetService("Workspace")
@@ -105,4 +106,24 @@ end)
 
 T3:Button("Bypass loading screen",function()
     self.PlayerGui.LoadingGui.Enabled = false
+end)
+
+T5:Dropdown("Select world to start fishing",wo,function(value)
+    _G.fishworld = value
+end)
+
+T5:Button("Start fishing",function()
+    game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("StartFishing",_G.fishworld,self.Character.HumanoidRootPart.Position)
+end)
+
+T5:Toggle("Auto cast every 4s",false,function(value)
+    _G.fish = value
+    while wait(4) do
+      if _G.fish == false then break end
+      game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("StartCastFishing")
+    end
+end)
+
+T5:Button("Sell all fish",function()
+    game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("SellFish")
 end)
