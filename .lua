@@ -79,6 +79,20 @@ T1:Button("Claim all index [ Bypassed ]",function()
     end
 end)
 
+T4:Dropdown("Select world",wo,function(value)
+    _G.TpWorld = value
+end)
+
+T4:Button("Teleport",function()
+    game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("TeleportBeacon",_G.TpWorld,"Spawn")
+end)
+
+T4:Button("Repair all beacons",function()
+    for array = 1,#wo do
+        game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("RepairBeacon",wo[array],"Spawn")
+    end
+end)
+
 T4:Button("Unlock regions",function()
     for array = 1,#wo do
         game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("UnlockRegion",wo[array])
