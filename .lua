@@ -7,9 +7,13 @@ local T4 = wndw:Tab("Unlock & Teleport")
 local T5 = wndw:Tab("Sell & Fishing")
 local T6 = wndw:Tab("Minigames")
 local T7 = wndw:Tab("Mystery Egg Hatcher")
+local T8 = wndw:Tab("Treats")
 
 local self = game.Players.LocalPlayer
 local crabInstance = ""
+local TreatsInstance = {
+    berry = 9e9
+}
 
 local workspace = game:GetService("Workspace")
 local wo = {}
@@ -199,8 +203,34 @@ T7:Toggle("Auto hatch",false,function(value)
     end
 end)
 
+T8:Slider("Treats amount",0,9e9,16,function(value)
+    TreatsInstance.berry = value
+end)
+
+T8:Toggle("Use all WildBerry",false,function(value)
+    _G.treat = value
+end)
+
+--TreatsInstance.berry
+--[[
+local args = {
+    [1] = "UseTreat",
+    [2] = "5013788c-1513-40c6-acbb-314d76b65edc",
+    [3] = "Wildberry",
+    [4] = 350
+}
+
+game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Function"]:InvokeServer(unpack(args))
+]]
 lib:HookFunction(function(method,received,args)
     if method == "FireServer" and received == "Event" and args[1] == "TargetEnemy" and args[2] ~= nil then
         crabInstance = args[2]
     end
+end)
+
+lib:HookCalled(function(self,args)
+     if self.Name == "Function" and args[1] == "UseTreat" and _G.treat == true then
+        args[4] = TreatsInstance.berry
+        return self.InvokeServer(self,unpack(args))
+     end
 end)
