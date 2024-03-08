@@ -6,6 +6,7 @@ local T3 = wndw:Tab("Loading Screen")
 local T4 = wndw:Tab("Unlock & Teleport")
 local T5 = wndw:Tab("Sell & Fishing")
 local self = game.Players.LocalPlayer
+local crabInstance = ""
 
 local workspace = game:GetService("Workspace")
 local wo = {}
@@ -29,7 +30,9 @@ T1:Toggle("Auto catch all pets",false,function(value)
     while wait() do
       if _G.cpets == false then break end
       for i,v in pairs(workspace["Rendered"]["Pets"]["World"]:GetChildren()) do
-        game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Function"]:InvokeServer("CapturePet",v.Name,_G.rarity)
+            if _G.cpets == true then
+                game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Function"]:InvokeServer("CapturePet",v.Name,_G.rarity)
+            end
       end
     end
 end)
@@ -62,14 +65,10 @@ T2:Toggle("Auto buy item shop [ Item 3 ]",false,function(value)
     end
 end)
 
-T1:Toggle("Auto activating all shrine",false,function(value)
-    _G.shrineact = value
-    while wait() do
-      if _G.shrineact == false then break end
+T1:Button("Claim all shrine",function()
       for array = 1,#shrine do
             game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("UseShrine",shrine[array])
       end
-    end
 end)
 
 T1:Button("Buy all upgrades",function()
@@ -81,6 +80,14 @@ end)
 T1:Button("Claim all index [ Bypassed ]",function()
     for array = 1,100 do
         game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("ClaimIndexReward",array)
+    end
+end)
+
+T1:Toggle("More damage to enemies",false,function(value)
+    _G.mde = value
+    while wait() do
+        if _G.mde == false then break end
+            game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("TargetEnemy",crabInstance)
     end
 end)
 
@@ -118,6 +125,7 @@ end)
 
 T5:Toggle("Auto cast every 4s",false,function(value)
     _G.fish = value
+    game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("StartCastFishing")
     while wait(4) do
       if _G.fish == false then break end
       game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("StartCastFishing")
@@ -126,4 +134,10 @@ end)
 
 T5:Button("Sell all fish",function()
     game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("SellFish")
+end)
+
+lib:HookFunction(function(method,received,args)
+    if method == "FireServer" and received == "Event" and args[1] == "TargetEnemy" and args[2] ~= nil then
+        crabInstance = args[2]
+    end
 end)
