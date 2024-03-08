@@ -5,6 +5,9 @@ local T2 = wndw:Tab("Shop")
 local T3 = wndw:Tab("Loading Screen")
 local T4 = wndw:Tab("Unlock & Teleport")
 local T5 = wndw:Tab("Sell & Fishing")
+local T6 = wndw:Tab("Minigames")
+local T7 = wndw:Tab("Mystery Egg Hatcher")
+
 local self = game.Players.LocalPlayer
 local crabInstance = ""
 
@@ -20,6 +23,18 @@ lib:AddTable(game:GetService("ReplicatedStorage").Assets.WorldMap,wo)
 lib:AddTable(workspace.Upgrades,upg)
 lib:AddTable(game:GetService("ReplicatedStorage").Assets.Eggs,egg)
 lib:AddTable(workspace.Shrines,shrine)
+
+T6:Label("this is for Ancient Dig minigames\nAncient Dig Minigame located in 'Dusty Dunes' world!")
+
+local function Fishing(str,pos)
+    game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("StartFishing",str,pos)
+end
+
+local function tilesGetAsync(func)
+    for i,v in pairs(workspace["Map"]["Dusty Dunes"]["Excavation"]["Tiles"]:GetChildren()) do
+        func(v.Name)
+    end
+end
 
 T1:Dropdown("Select catch rarities",{"Common","Rare","Epic","Legendary"},function(value)
     _G.rarity = value
@@ -115,12 +130,34 @@ T3:Button("Bypass loading screen",function()
     self.PlayerGui.LoadingGui.Enabled = false
 end)
 
-T5:Dropdown("Select world to start fishing",wo,function(value)
+--[[
+local args = {
+    [1] = "StartFishing",
+    [2] = "Dusty Dunes",
+    [3] = Vector3.new(1842.6231689453125, 49.098777770996094, 105.9592056274414)
+}
+
+game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer(unpack(args))
+]]
+
+T5:Dropdown("Select world to start fishing",{"Pet Park","Mellow Meadows","Auburn Woods","Frosty Peaks","Sunset Shores","Dusty Dunes"},function(value)
     _G.fishworld = value
 end)
 
 T5:Button("Start fishing",function()
-    game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("StartFishing",_G.fishworld,self.Character.HumanoidRootPart.Position)
+    if _G.fishworld == "Pet Park" then
+        Fishing("Pet Park",Vector3.new(1138.7437744140625,9.686546325683594,1633.845703125))
+    elseif _G.fishworld == "Mellow Meadows" then
+        Fishing("Mellow Meadows",Vector3.new(874.0309448242188,21.719955444335938,1490.1602783203125))
+    elseif _G.fishworld == "Auburn Woods" then
+        Fishing("Auburn Woods",Vector3.new(716.324462890625,21.719636917114258,1150.069091796875))
+    elseif _G.fishworld == "Frosty Peaks" then
+        Fishing("Frosty Peaks",Vector3.new(977.94580078125,37.48805618286133,719.7373657226562))
+    elseif _G.fishworld == "Sunset Shores", then
+        Fishing("Sunset Shores",Vector3.new(1319.7314453125,37.488059997558594,621.930419921875))
+    elseif _G.fishworld == "Dusty Dunes" then
+        Fishing("Dusty Dunes",Vector3.new(1842.6231689453125,49.098777770996094,105.9592056274414))
+    end
 end)
 
 T5:Toggle("Auto cast every 4s",false,function(value)
@@ -134,6 +171,32 @@ end)
 
 T5:Button("Sell all fish",function()
     game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("SellFish")
+end)
+
+T5:Button("Stop fishing",function()
+    game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("StopFishing")
+end)
+
+T6:Toggle("Auto dig",false,function(value)
+    _G.autDig = value
+    while wait() do
+        if _G.autDig == false then break end
+            tilesGetAsync(function(tilesAsync)
+                game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("TryMinigameInput",tilesAsync)
+            end)
+    end
+end)
+
+T7:Dropdown("Select Mystery Egg",{"Elite Mystery Egg","Mystery Egg"},function(value)
+    _G.mystype = value
+end)
+
+T7:Toggle("Auto hatch",false,function(value)
+    _G.autmys = value
+    while wait() do
+        if _G.autmys == false then break end
+            game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Function"]:InvokeServer("TryHatchEgg",_G.mystype)
+    end
 end)
 
 lib:HookFunction(function(method,received,args)
