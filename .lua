@@ -153,7 +153,7 @@ T5:Button("Start fishing",function()
         Fishing("Auburn Woods",Vector3.new(716.324462890625,21.719636917114258,1150.069091796875))
     elseif _G.fishworld == "Frosty Peaks" then
         Fishing("Frosty Peaks",Vector3.new(977.94580078125,37.48805618286133,719.7373657226562))
-    elseif _G.fishworld == "Sunset Shores", then
+    elseif _G.fishworld == "Sunset Shores" then
         Fishing("Sunset Shores",Vector3.new(1319.7314453125,37.488059997558594,621.930419921875))
     elseif _G.fishworld == "Dusty Dunes" then
         Fishing("Dusty Dunes",Vector3.new(1842.6231689453125,49.098777770996094,105.9592056274414))
