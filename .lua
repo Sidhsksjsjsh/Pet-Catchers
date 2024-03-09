@@ -1,5 +1,5 @@
 local lib = loadstring(game:HttpGet("https://raw.githubusercontent.com/Sidhsksjsjsh/VAPE-UI-MODDED/main/.lua"))()
-local wndw = lib:Window("VIP Turtle Hub V4 - TURTLE HUB ON TOP ( dont complain )")
+local wndw = lib:Window("VIP Turtle Hub V4 - 🔥🤖")
 local T1 = wndw:Tab("Main")
 local T2 = wndw:Tab("Shop")
 local T3 = wndw:Tab("Loading Screen")
@@ -27,12 +27,14 @@ local act = {}
 local upg = {}
 local egg = {}
 local shrine = {}
+local mounts = {}
 
 lib:AddTable(workspace.Activations,act)
 lib:AddTable(game:GetService("ReplicatedStorage").Assets.WorldMap,wo)
 lib:AddTable(workspace.Upgrades,upg)
 lib:AddTable(game:GetService("ReplicatedStorage").Assets.Eggs,egg)
 lib:AddTable(workspace.Shrines,shrine)
+lib:AddTable(game:GetService("ReplicatedStorage").Assets.Mounts,mounts)
 
 T6:Label("this is for Ancient Dig minigames\nAncient Dig Minigame located in 'Dusty Dunes' world!")
 T9:Label("Sorry ill change it into dropdown cus i have no time to make item list")
@@ -238,7 +240,7 @@ T7:Toggle("Auto hatch",false,function(value)
     end
 end)
 
-T8:Dropdown("Select mount",{"Hoverboard","UFO"},function(value)
+T8:Dropdown("Select mount",mounts,function(value)
     config.mount = value
 end)
 
@@ -262,9 +264,8 @@ lib:HookFunction(function(method,received,args)
     end
 end)
 
-lib:HookCalled(function(self,args)
-     if self.Name == "Event" and args[1] == "EquipMount" and _G.treat == true then
-        args[2] = config.mount
-        return self.FireServer(self,unpack(args))
-     end
+self:GetAttributeChangedSignal("Mount"):Connect(function()
+	if _G.treat == true then
+		self:SetAttribute("Mount",config.mount .. "/Default")
+	end
 end)
