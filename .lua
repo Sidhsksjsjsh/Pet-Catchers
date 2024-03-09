@@ -17,7 +17,7 @@ local amount = {
     craft = 1
 }
 
-local config {
+local config = {
     mount = "Hoverboard"
 }
 
