@@ -210,6 +210,25 @@ T5:Toggle("Auto cast every 4s",false,function(value)
     end
 end)
 
+if self.Name == "Rivanda_Cheater" then
+T5:Toggle("Auto cast every 0.5",false,function(value)
+    _G.fishm = value
+    game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("StartCastFishing")
+    while wait(0.5) do
+      if _G.fishm == false then break end
+      game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("StartCastFishing")
+    end
+end)
+
+T5:Toggle("Auto cast",false,function(value)
+    _G.fishf = value
+    while wait() do
+      if _G.fishf == false then break end
+      game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("StartCastFishing")
+    end
+end)
+end
+
 T5:Button("Sell all fish",function()
     game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("SellFish")
 end)
