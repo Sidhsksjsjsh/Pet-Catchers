@@ -8,11 +8,13 @@ local T5 = wndw:Tab("Sell & Fishing")
 local T6 = wndw:Tab("Minigames")
 local T7 = wndw:Tab("Mystery Egg Hatcher")
 local T8 = wndw:Tab("Treats")
+local T9 = wndw:Tab("Crafting")
 
 local self = game.Players.LocalPlayer
 local crabInstance = ""
-local TreatsInstance = {
-    berry = 9e9
+local amount = {
+    berry = 4115,
+    craft = 1
 }
 
 local workspace = game:GetService("Workspace")
@@ -29,6 +31,35 @@ lib:AddTable(game:GetService("ReplicatedStorage").Assets.Eggs,egg)
 lib:AddTable(workspace.Shrines,shrine)
 
 T6:Label("this is for Ancient Dig minigames\nAncient Dig Minigame located in 'Dusty Dunes' world!")
+T9:Label("Sorry ill change it into dropdown cus i have no time to make item list")
+
+T9:Textbox("Item name",false,function(value)
+    _G.craftitem = value
+end)
+
+T9:Dropdown("Select Crafting slot",{"1","2","3"},function(value)
+    _G.craftslot = tonumber(value)
+end)
+
+T1:Slider("Craft amount ( MAX 999 )",0,999,1,function(value)
+    amount.craft = value
+end)
+
+T9:Button("Craft",function()
+    game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("StartCrafting",_G.craftslot,_G.craftitem,amount.craft)
+end)
+
+T9:Button("Claim all crafting",function()
+    game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("ClaimCrafting",1)
+    game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("ClaimCrafting",2)
+    game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("ClaimCrafting",3)
+end)
+
+T9:Button("Unlock all crafting slots",function()
+    game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("UnlockExtraCraftSlot")
+    game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("UnlockExtraCraftSlot")
+    game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("UnlockExtraCraftSlot")
+end)
 
 local function Fishing(str,pos)
     game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("StartFishing",str,pos)
@@ -204,7 +235,7 @@ T7:Toggle("Auto hatch",false,function(value)
 end)
 
 T8:Slider("Treats amount",0,9e9,16,function(value)
-    TreatsInstance.berry = value
+    amount.berry = value
 end)
 
 T8:Toggle("Use all WildBerry",false,function(value)
@@ -230,7 +261,7 @@ end)
 
 lib:HookCalled(function(self,args)
      if self.Name == "Function" and args[1] == "UseTreat" and _G.treat == true then
-        args[4] = TreatsInstance.berry
+        args[4] = amount.berry
         return self.InvokeServer(self,unpack(args))
      end
 end)
