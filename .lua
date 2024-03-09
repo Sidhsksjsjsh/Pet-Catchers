@@ -174,14 +174,14 @@ end)
 --[[
 local args = {
     [1] = "StartFishing",
-    [2] = "Dusty Dunes",
-    [3] = Vector3.new(1842.6231689453125, 49.098777770996094, 105.9592056274414)
+    [2] = "Gloomy Grotto",
+    [3] = Vector3.new(1545.80615234375, 49.098777770996094, -94.8126220703125)
 }
 
 game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer(unpack(args))
 ]]
 
-T5:Dropdown("Select world to start fishing",{"Pet Park","Mellow Meadows","Auburn Woods","Frosty Peaks","Sunset Shores","Dusty Dunes"},function(value)
+T5:Dropdown("Select world to start fishing",{"Pet Park","Mellow Meadows","Auburn Woods","Frosty Peaks","Sunset Shores","Dusty Dunes","Gloomy Grotto"},function(value)
     _G.fishworld = value
 end)
 
@@ -198,6 +198,8 @@ T5:Button("Start fishing",function()
         Fishing("Sunset Shores",Vector3.new(1319.7314453125,37.488059997558594,621.930419921875))
     elseif _G.fishworld == "Dusty Dunes" then
         Fishing("Dusty Dunes",Vector3.new(1842.6231689453125,49.098777770996094,105.9592056274414))
+    elseif _G.fishworld == "Gloomy Grotto" then
+	Fishing("Gloomy Grotto",Vector3.new(1545.80615234375,49.098777770996094,-94.8126220703125))
     end
 end)
 
