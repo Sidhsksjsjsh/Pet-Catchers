@@ -7,7 +7,7 @@ local T4 = wndw:Tab("Unlock & Teleport")
 local T5 = wndw:Tab("Sell & Fishing")
 local T6 = wndw:Tab("Minigames")
 local T7 = wndw:Tab("Mystery Egg Hatcher")
-local T8 = wndw:Tab("Treats")
+local T8 = wndw:Tab("Config")
 local T9 = wndw:Tab("Crafting")
 
 local self = game.Players.LocalPlayer
@@ -15,6 +15,10 @@ local crabInstance = ""
 local amount = {
     berry = 4115,
     craft = 1
+}
+
+local config {
+    mount = "Hoverboard"
 }
 
 local workspace = game:GetService("Workspace")
@@ -41,7 +45,7 @@ T9:Dropdown("Select Crafting slot",{"1","2","3"},function(value)
     _G.craftslot = tonumber(value)
 end)
 
-T1:Slider("Craft amount ( MAX 999 )",0,999,1,function(value)
+T9:Slider("Craft amount ( MAX 999 )",0,999,1,function(value)
     amount.craft = value
 end)
 
@@ -234,24 +238,23 @@ T7:Toggle("Auto hatch",false,function(value)
     end
 end)
 
-T8:Slider("Treats amount",0,9e9,16,function(value)
-    amount.berry = value
+T8:Dropdown("Select mount",{"Hoverboard","UFO"},function(value)
+    config.mount = value
 end)
 
-T8:Toggle("Use all WildBerry",false,function(value)
+T8:Toggle("Set hoverboard config",false,function(value)
     _G.treat = value
 end)
 
 --TreatsInstance.berry
 --[[
 local args = {
-    [1] = "UseTreat",
-    [2] = "5013788c-1513-40c6-acbb-314d76b65edc",
-    [3] = "Wildberry",
-    [4] = 350
+    [1] = "EquipMount",
+    [2] = "Hoverboard",
+    [3] = "Default"
 }
 
-game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Function"]:InvokeServer(unpack(args))
+game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer(unpack(args))
 ]]
 lib:HookFunction(function(method,received,args)
     if method == "FireServer" and received == "Event" and args[1] == "TargetEnemy" and args[2] ~= nil then
@@ -260,8 +263,8 @@ lib:HookFunction(function(method,received,args)
 end)
 
 lib:HookCalled(function(self,args)
-     if self.Name == "Function" and args[1] == "UseTreat" and _G.treat == true then
-        args[4] = amount.berry
-        return self.InvokeServer(self,unpack(args))
+     if self.Name == "Event" and args[1] == "EquipMount" and _G.treat == true then
+        args[2] = config.mount
+        return self.FireServer(self,unpack(args))
      end
 end)
