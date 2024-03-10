@@ -1,12 +1,12 @@
 local lib = loadstring(game:HttpGet("https://raw.githubusercontent.com/Sidhsksjsjsh/VAPE-UI-MODDED/main/.lua"))()
-local wndw = lib:Window("VIP Turtle Hub V4 - 🔥🤖")
+local wndw = lib:Window("VIP Turtle Hub V4 - Fast update, better feature")
 local T1 = wndw:Tab("Main")
 local T2 = wndw:Tab("Shop")
 local T3 = wndw:Tab("Loading Screen")
 local T4 = wndw:Tab("Unlock & Teleport")
 local T5 = wndw:Tab("Sell & Fishing")
 local T6 = wndw:Tab("Minigames")
-local T7 = wndw:Tab("Mystery Egg Hatcher")
+local T7 = wndw:Tab("Items")
 local T8 = wndw:Tab("Config")
 local T9 = wndw:Tab("Crafting")
 
@@ -28,6 +28,7 @@ local upg = {}
 local egg = {}
 local shrine = {}
 local mounts = {}
+local items = {}
 
 lib:AddTable(workspace.Activations,act)
 lib:AddTable(game:GetService("ReplicatedStorage").Assets.WorldMap,wo)
@@ -35,6 +36,7 @@ lib:AddTable(workspace.Upgrades,upg)
 lib:AddTable(game:GetService("ReplicatedStorage").Assets.Eggs,egg)
 lib:AddTable(workspace.Shrines,shrine)
 lib:AddTable(game:GetService("ReplicatedStorage").Assets.Mounts,mounts)
+lib:AddTable(game:GetService("ReplicatedStorage").Assets.Items,items)
 
 T6:Label("this is for Ancient Dig minigames\nAncient Dig Minigame located in 'Dusty Dunes' world!")
 T9:Label("Sorry ill change it into dropdown cus i have no time to\nmake item list")
@@ -71,10 +73,36 @@ local function Fishing(str,pos)
     game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("StartFishing",str,pos)
 end
 
+local function childAsync(str,funct)
+	for i,v in pairs(str:GetChildren()) do
+		funct(v)
+	end
+end
+
 local function tilesGetAsync(func)
     for i,v in pairs(workspace["Map"]["Dusty Dunes"]["Excavation"]["Tiles"]:GetChildren()) do
         func(v.Name)
     end
+end
+
+local function enemiesGetAsync(array,funct)
+	childAsync(workspace["Markers"]["Enemies"][self.PlayerGui.ScreenGui.Region.Frame.Label.Text],function(sync)
+		if array == "Armored Snowman" then
+			if self.PlayerGui.ScreenGui.Region.Frame.Label.Text == "Frosty Peaks" then
+				childAsync(sync["Armored"],function(async)
+					if async.Name ~= "SourceFolder" then
+						funct(async.Name)
+				        end
+			        end)
+		        end
+		else
+			childAsync(sync["Default"],function(fet)
+				if fet.Name ~= "SourceFolder" then
+					funct(fet.Name)
+				end
+			end)
+		end
+	end)
 end
 
 T1:Dropdown("Select catch rarities",{"Common","Rare","Epic","Legendary"},function(value)
@@ -133,18 +161,38 @@ T1:Button("Buy all upgrades",function()
     end
 end)
 
-T1:Button("Claim all index [ Bypassed ]",function()
+T1:Button("Claim all index",function()
     for array = 1,100 do
         game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("ClaimIndexReward",array)
     end
 end)
 
-T1:Toggle("More damage to enemies",false,function(value)
+T1:Toggle("Auto damage to enemies",false,function(value)
     _G.mde = value
     while wait() do
         if _G.mde == false then break end
-            game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("TargetEnemy",crabInstance)
-    end
+		enemiesGetAsync("def",function(asyc)
+			game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("TargetEnemy",asyc)
+		end)
+	end
+end)
+
+T1:Toggle("Auto damage to Armored Snowman [ Frosty Peaks ]",false,function(value)
+    _G.asfp = value
+    task.spawn(function()
+	if self.PlayerGui.ScreenGui.Region.Frame.Label.Text ~= "Frosty Peaks" then
+		game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("RepairBeacon","Frosty Peaks","Spawn")
+		wait(0.2)
+		game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("TeleportBeacon","Frosty Peaks","Spawn")
+	end
+    end)
+		
+    while wait() do
+        if _G.asfp == false then break end
+		enemiesGetAsync("Armored Snowman",function(asyc)
+			game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("TargetEnemy",asyc)
+		end)
+	end
 end)
 
 T4:Dropdown("Select world",wo,function(value)
@@ -240,16 +288,34 @@ T6:Toggle("Auto dig",false,function(value)
     end
 end)
 
-T7:Dropdown("Select Mystery Egg",{"Elite Mystery Egg","Mystery Egg"},function(value)
+T6:Label("Auto play for dance-of coming soon\nthat minigames located in 'Gloomy Grotto'")
+
+T7:Dropdown("Select item",items,function(value)
     _G.mystype = value
 end)
 
-T7:Toggle("Auto hatch",false,function(value)
+T7:Toggle("Auto use/hatch selected item",false,function(value)
     _G.autmys = value
     while wait() do
         if _G.autmys == false then break end
-            game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Function"]:InvokeServer("TryHatchEgg",_G.mystype)
-    end
+		if _G.mystype == "Elite Mystery Egg" then
+			game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Function"]:InvokeServer("TryHatchEgg","Elite Mystery Egg")
+		elseif _G.mystype == "Mystery Egg" then
+			game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Function"]:InvokeServer("TryHatchEgg","Mystery Egg")
+		elseif _G.mystype == "Prismatic Mystery Egg" then
+			game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Function"]:InvokeServer("TryHatchEgg","Prismatic Mystery Egg")
+		else
+			game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("UsePowerup",_G.mystype)
+		end
+	end
+end)
+
+T7:Toggle("Auto equip best pet",false,function(value)
+    _G.best = value
+	while wait() do
+		if _G.best == false then break end
+			game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("EquipBestPets")
+	end
 end)
 
 T8:Dropdown("Select mount",mounts,function(value)
@@ -270,11 +336,11 @@ local args = {
 
 game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer(unpack(args))
 ]]
-lib:HookFunction(function(method,received,args)
+--[[lib:HookFunction(function(method,received,args)
     if method == "FireServer" and received == "Event" and args[1] == "TargetEnemy" and args[2] ~= nil then
         crabInstance = args[2]
     end
-end)
+end)]]
 
 self:GetAttributeChangedSignal("Mount"):Connect(function()
 	if _G.treat == true then
