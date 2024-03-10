@@ -1,6 +1,6 @@
 local lib = loadstring(game:HttpGet("https://raw.githubusercontent.com/Sidhsksjsjsh/VAPE-UI-MODDED/main/.lua"))()
 local wndw = lib:Window("VIP Turtle Hub V4 - Fast update, better feature")
-local T1 = wndw:Tab("Main & snipe")
+local T1 = wndw:Tab("Main")
 local T2 = wndw:Tab("Shop")
 local T3 = wndw:Tab("Boss")
 local T4 = wndw:Tab("Unlock & Teleport")
@@ -12,6 +12,8 @@ local T9 = wndw:Tab("Crafting")
 
 local self = game.Players.LocalPlayer
 local crabInstance = ""
+local grav = workspace.Gravity
+
 local amount = {
     berry = 4115,
     craft = 1
@@ -268,7 +270,21 @@ T3:Toggle("Auto respawn boss",false,function(value)
 		end
 end)
 
-T3:Label("Fuck you")
+T3:Toggle("Auto safe place [ only work in kraken boss ]",false,function(value)
+	_G.safezone = value
+	if value then
+		workspace.Gravity = 0
+	else
+		workspace.Gravity = grav
+	end
+
+		while wait() do
+			if _G.safezone == false then break end
+				self.Character.HumanoidRootPart.Position = Vector3.new(1176,85,337)
+		end
+end)
+
+--T3:Label("Fuck you")
 --Workspace.Rendered.Pets.World.7b55e3ef-327b-4990-80c7-66eabe8d3aea.Hitbox.WorldPetGui.Stars.4.Common
 
 --[[
