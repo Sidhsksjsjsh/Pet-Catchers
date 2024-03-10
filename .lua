@@ -141,7 +141,7 @@ T1:Toggle("Auto catch [ Manual ID ]",false,function(value)
     _G.manualver = value
     while wait() do
       if _G.manualver == false then break end
-	game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Function"]:InvokeServer("CapturePet",pets._self.id,_G.rarity)
+	game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Function"]:InvokeServer("CapturePet",crabInstance,_G.rarity)
     end
 end)
 end
@@ -240,7 +240,7 @@ T4:Button("Unlock regions",function()
     end
 end)
 
-T1:Dropdown("Select boss",boss.table,function(value)
+T3:Dropdown("Select boss",boss.table,function(value)
 	boss.name = value
 end)
 
@@ -385,7 +385,7 @@ game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]
 ]]
 lib:HookFunction(function(method,received,args)
     if method == "InvokeServer" and received == "Function" and args[1] == "CapturePet" then
-	pets._self.id = args[2]
+	crabInstance = args[2]
     end
 end)
 
