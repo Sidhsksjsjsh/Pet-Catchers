@@ -30,7 +30,7 @@ local boss = {
 -- pets._self.pos = 
 -- pets._self.rarity = 
 local workspace = game:GetService("Workspace")
-local wo = {}
+local wo = {"The Blackmarket"}
 local act = {}
 local upg = {}
 local egg = {}
@@ -191,13 +191,15 @@ T1:Button("Claim all index",function()
         game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("ClaimIndexReward",array)
     end
 end)
-
+--game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("TargetEnemy",asyc)
 T1:Toggle("Auto damage to enemies",false,function(value)
     _G.mde = value
     while wait() do
         if _G.mde == false then break end
-		enemiesGetAsync("def",function(asyc)
-			game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("TargetEnemy",asyc)
+		childAsync(workspace["Markers"]["Enemies"][self.PlayerGui.ScreenGui.Region.Frame.Label.Text]["Default"],function(fet)
+			if fet.Name ~= "SourceFolder" then
+				game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("TargetEnemy",fet.Name)
+			end
 		end)
 	end
 end)
@@ -214,8 +216,10 @@ T1:Toggle("Auto damage to Armored Snowman [ Frosty Peaks ]",false,function(value
 		
     while wait() do
         if _G.asfp == false then break end
-		enemiesGetAsync("Armored Snowman",function(asyc)
-			game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("TargetEnemy",asyc)
+		childAsync(workspace["Markers"]["Enemies"][self.PlayerGui.ScreenGui.Region.Frame.Label.Text]["Armored"],function(fet)
+			if fet.Name ~= "SourceFolder" then
+				game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("TargetEnemy",fet.Name)
+			end
 		end)
 	end
 end)
@@ -225,7 +229,11 @@ T4:Dropdown("Select world",wo,function(value)
 end)
 
 T4:Button("Teleport",function()
-    game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("TeleportBeacon",_G.TpWorld,"Spawn")
+	if _G.TpWorld == "The Blackmarket" then
+		game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("TeleportBeacon","Magma Basin","The Blackmarket")
+	else
+		game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("TeleportBeacon",_G.TpWorld,"Spawn")
+	end
 end)
 
 T4:Button("Repair all beacons",function()
@@ -266,14 +274,14 @@ T3:Label("Fuck you")
 --[[
 local args = {
     [1] = "StartFishing",
-    [2] = "Gloomy Grotto",
-    [3] = Vector3.new(1545.80615234375, 49.098777770996094, -94.8126220703125)
+    [2] = "Magma Basin",
+    [3] = Vector3.new(1260.465576171875, 183.92877197265625, -435.5975646972656)
 }
 
 game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer(unpack(args))
 ]]
 
-T5:Dropdown("Select world to start fishing",{"Pet Park","Mellow Meadows","Auburn Woods","Frosty Peaks","Sunset Shores","Dusty Dunes","Gloomy Grotto"},function(value)
+T5:Dropdown("Select world to start fishing",{"Pet Park","Mellow Meadows","Auburn Woods","Frosty Peaks","Sunset Shores","Dusty Dunes","Gloomy Grotto","Magma Basin"},function(value)
     _G.fishworld = value
 end)
 
@@ -292,6 +300,8 @@ T5:Button("Start fishing",function()
         Fishing("Dusty Dunes",Vector3.new(1842.6231689453125,49.098777770996094,105.9592056274414))
     elseif _G.fishworld == "Gloomy Grotto" then
 	Fishing("Gloomy Grotto",Vector3.new(1545.80615234375,49.098777770996094,-94.8126220703125))
+    elseif _G.fishworld == "Magma Basin" then
+	Fishing("Magma Basin",Vector3.new(1260.465576171875,183.92877197265625,-435.5975646972656))
     end
 end)
 
