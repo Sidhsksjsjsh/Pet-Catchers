@@ -1,8 +1,8 @@
 local lib = loadstring(game:HttpGet("https://raw.githubusercontent.com/Sidhsksjsjsh/VAPE-UI-MODDED/main/.lua"))()
 local wndw = lib:Window("VIP Turtle Hub V4 - Fast update, better feature")
-local T1 = wndw:Tab("Main")
+local T1 = wndw:Tab("Main & snipe")
 local T2 = wndw:Tab("Shop")
-local T3 = wndw:Tab("Loading Screen")
+local T3 = wndw:Tab("Boss")
 local T4 = wndw:Tab("Unlock & Teleport")
 local T5 = wndw:Tab("Sell & Fishing")
 local T6 = wndw:Tab("Minigames")
@@ -21,6 +21,30 @@ local config = {
     mount = "Hoverboard"
 }
 
+local boss = {
+	lvl = 1,
+	name = "king-slime",
+	table = {}
+}
+
+local pets = {
+	_self = {
+		pos = Vector3.new(),
+		rarity = "",
+		id = ""
+	}
+}
+
+local snipe = {
+	_self = {
+		cd = 2,
+		found = false,
+		count = 0
+	}
+}
+
+-- pets._self.pos = 
+-- pets._self.rarity = 
 local workspace = game:GetService("Workspace")
 local wo = {}
 local act = {}
@@ -37,9 +61,16 @@ lib:AddTable(game:GetService("ReplicatedStorage").Assets.Eggs,egg)
 lib:AddTable(workspace.Shrines,shrine)
 lib:AddTable(game:GetService("ReplicatedStorage").Assets.Mounts,mounts)
 lib:AddTable(game:GetService("ReplicatedStorage").Assets.Items,items)
+lib:AddTable(workspace.Bosses,boss.table)
 
 T6:Label("this is for Ancient Dig minigames\nAncient Dig Minigame located in 'Dusty Dunes' world!")
 T9:Label("Sorry ill change it into dropdown cus i have no time to\nmake item list")
+
+local function getmetachildren(str,funct)
+	for i,v in pairs(str:GetDescendants()) do
+		funct(v)
+	end
+end
 
 T9:Textbox("Item name",false,function(value)
     _G.craftitem = value
@@ -120,6 +151,16 @@ T1:Toggle("Auto catch all pets",false,function(value)
       end
     end
 end)
+
+if self.Name == "Rivanda_Cheater" then
+T1:Toggle("Auto catch [ Manual ID ]",false,function(value)
+    _G.manualver = value
+    while wait() do
+      if _G.manualver == false then break end
+	game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Function"]:InvokeServer("CapturePet",pets._self.id,_G.rarity)
+    end
+end)
+end
 
 T2:Dropdown("Select shops",act,function(value)
         _G.shop = value
@@ -215,8 +256,51 @@ T4:Button("Unlock regions",function()
     end
 end)
 
-T3:Button("Bypass loading screen",function()
-    self.PlayerGui.LoadingGui.Enabled = false
+T1:Dropdown("Select boss",boss.table,function(value)
+	boss.name = value
+end)
+
+T3:Slider("Boss level ( MAX 300 )",0,300,1,function(value)
+	boss.lvl = value
+end)
+--self.PlayerGui.LoadingGui.Enabled = false
+T3:Button("Boss fight",function()
+    game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Function"]:InvokeServer("BossRequest",boss.name,boss.lvl)
+end)
+
+T3:Toggle("Auto respawn boss",false,function(value)
+	_G.autoresboss = value
+		while wait() do
+			if _G.autoresboss == false then break end
+				game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("RespawnBoss",boss.name)
+		end
+end)
+
+T3:Label("\/ Legendary snipe \/")
+--Workspace.Rendered.Pets.World.7b55e3ef-327b-4990-80c7-66eabe8d3aea.Hitbox.WorldPetGui.Stars.4.Common
+T3:Button("snipe",function()
+	repeat wait(snipe._self.cd)
+		snipe._self.count = snipe._self.count + 1
+		if snipe._self.count > #wo then
+			snipe._self.count = 0
+		end
+			
+		childAsync(workspace.Rendered.Pets.World,function(sync)
+			getmetachildren(sync,function(meta)
+				if meta:FindFirstChild("Legendary") or meta.Name:find("Legendary") or meta.Name == "Legendary" then
+					snipe._self.found == true
+					pets._self.rarity == "Legendary"
+					pets._self.pos = sync.Position
+					snipe._self.count = 0
+				else
+					snipe._self.found == false 
+					game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("TeleportBeacon",wo[snipe._self.count],"Spawn")
+				end
+			end)
+		end)
+	until snipe._self.found == true and pets._self.rarity == "Legendary"
+	wait(1)
+	self.Character.HumanoidRootPart.Position = pets._self.pos
 end)
 
 --[[
@@ -336,11 +420,14 @@ local args = {
 
 game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer(unpack(args))
 ]]
---[[lib:HookFunction(function(method,received,args)
-    if method == "FireServer" and received == "Event" and args[1] == "TargetEnemy" and args[2] ~= nil then
-        crabInstance = args[2]
+--[[
+game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Function"]:InvokeServer("CapturePet",v.Name,_G.rarity)
+]]
+lib:HookFunction(function(method,received,args)
+    if method == "InvokeServer" and received == "Function" and args[1] == "CapturePet" then
+	pets._self.id = args[2]
     end
-end)]]
+end)
 
 self:GetAttributeChangedSignal("Mount"):Connect(function()
 	if _G.treat == true then
