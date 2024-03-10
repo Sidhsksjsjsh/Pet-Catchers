@@ -27,22 +27,6 @@ local boss = {
 	table = {}
 }
 
-local pets = {
-	_self = {
-		pos = Vector3.new(),
-		rarity = "",
-		id = ""
-	}
-}
-
-local snipe = {
-	_self = {
-		cd = 2,
-		found = false,
-		count = 0
-	}
-}
-
 -- pets._self.pos = 
 -- pets._self.rarity = 
 local workspace = game:GetService("Workspace")
@@ -276,32 +260,8 @@ T3:Toggle("Auto respawn boss",false,function(value)
 		end
 end)
 
-T3:Label("\/ Legendary snipe \/")
+T3:Label("Fuck you")
 --Workspace.Rendered.Pets.World.7b55e3ef-327b-4990-80c7-66eabe8d3aea.Hitbox.WorldPetGui.Stars.4.Common
-T3:Button("snipe",function()
-	repeat wait(snipe._self.cd)
-		snipe._self.count = snipe._self.count + 1
-		if snipe._self.count > #wo then
-			snipe._self.count = 0
-		end
-			
-		childAsync(workspace.Rendered.Pets.World,function(sync)
-			getmetachildren(sync,function(meta)
-				if meta:FindFirstChild("Legendary") or meta.Name:find("Legendary") or meta.Name == "Legendary" then
-					snipe._self.found == true
-					pets._self.rarity == "Legendary"
-					pets._self.pos = sync.Position
-					snipe._self.count = 0
-				else
-					snipe._self.found == false 
-					game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("TeleportBeacon",wo[snipe._self.count],"Spawn")
-				end
-			end)
-		end)
-	until snipe._self.found == true and pets._self.rarity == "Legendary"
-	wait(1)
-	self.Character.HumanoidRootPart.Position = pets._self.pos
-end)
 
 --[[
 local args = {
