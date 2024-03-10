@@ -37,7 +37,7 @@ lib:AddTable(workspace.Shrines,shrine)
 lib:AddTable(game:GetService("ReplicatedStorage").Assets.Mounts,mounts)
 
 T6:Label("this is for Ancient Dig minigames\nAncient Dig Minigame located in 'Dusty Dunes' world!")
-T9:Label("Sorry ill change it into dropdown cus i have no time to make item list")
+T9:Label("Sorry ill change it into dropdown cus i have no time to\nmake item list")
 
 T9:Textbox("Item name",false,function(value)
     _G.craftitem = value
@@ -212,31 +212,22 @@ T5:Toggle("Auto cast every 4s",false,function(value)
     end
 end)
 
-if self.Name == "Rivanda_Cheater" then
-T5:Toggle("Auto cast every 0.5",false,function(value)
-    _G.fishm = value
-    game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("StartCastFishing")
-    while wait(0.5) do
-      if _G.fishm == false then break end
-      game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("StartCastFishing")
-    end
-end)
-
-T5:Toggle("Auto cast",false,function(value)
-    _G.fishf = value
-    while wait() do
-      if _G.fishf == false then break end
-      game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("StartCastFishing")
-    end
-end)
-end
-
 T5:Button("Sell all fish",function()
     game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("SellFish")
 end)
 
 T5:Button("Stop fishing",function()
     game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("StopFishing")
+end)
+
+T5:Button("Fishing all region",function()
+	Fishing("Pet Park",Vector3.new(1138.7437744140625,9.686546325683594,1633.845703125))
+	Fishing("Mellow Meadows",Vector3.new(874.0309448242188,21.719955444335938,1490.1602783203125))
+	Fishing("Auburn Woods",Vector3.new(716.324462890625,21.719636917114258,1150.069091796875))
+	Fishing("Frosty Peaks",Vector3.new(977.94580078125,37.48805618286133,719.7373657226562))
+	Fishing("Sunset Shores",Vector3.new(1319.7314453125,37.488059997558594,621.930419921875))
+	Fishing("Dusty Dunes",Vector3.new(1842.6231689453125,49.098777770996094,105.9592056274414))
+	Fishing("Gloomy Grotto",Vector3.new(1545.80615234375,49.098777770996094,-94.8126220703125))
 end)
 
 T6:Toggle("Auto dig",false,function(value)
