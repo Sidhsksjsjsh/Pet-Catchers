@@ -254,9 +254,10 @@ T3:Dropdown("Select boss",boss.table,function(value)
 	boss.name = value
 end)
 
-T3:Slider("Boss level ( MAX 300 )",0,300,1,function(value)
-	boss.lvl = value
+T3:Textbox("Enter boss level",false,function(value)
+    boss.lvl = tonumber(value)
 end)
+
 --self.PlayerGui.LoadingGui.Enabled = false
 T3:Button("Boss fight",function()
     game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Function"]:InvokeServer("BossRequest",boss.name,boss.lvl)
