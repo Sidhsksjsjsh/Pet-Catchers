@@ -10,6 +10,8 @@ local T6 = wndw:Tab("Minigames")
 local T7 = wndw:Tab("Items")
 local T8 = wndw:Tab("Config")
 local T9 = wndw:Tab("Crafting")
+local T10 = wndw:Tab("Attack")
+
 
 local self = game.Players.LocalPlayer
 local crabInstance = ""
@@ -195,7 +197,23 @@ T1:Button("Claim all index",function()
     end
 end)
 --game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("TargetEnemy",asyc)
-T1:Toggle("Auto damage to enemies",false,function(value)
+T10:Dropdown("Select world to spam damage",wo,function(value)
+    _G.Worldtarget = value
+end)
+
+T10:Toggle("Auto damage to a selected world",false,function(value)
+    _G.selworld = value
+    while wait() do
+        if _G.selworld == false then break end
+		childAsync(workspace["Markers"]["Enemies"][_G.Worldtarget]["Default"],function(fet)
+			if fet.Name ~= "SourceFolder" then
+				game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("TargetEnemy",fet.Name)
+			end
+		end)
+	end
+end)
+
+T10:Toggle("Auto damage to rendered enemies",false,function(value)
     _G.mde = value
     while wait() do
         if _G.mde == false then break end
@@ -206,8 +224,22 @@ T1:Toggle("Auto damage to enemies",false,function(value)
 		end)
 	end
 end)
+		
+T10:Toggle("Auto damage to all enemies",false,function(value)
+    _G.allwo = value
+    while wait() do
+        if _G.allwo == false then break end
+		childAsync(workspace["Markers"]["Enemies"],function(track)
+			childAsync(track["Default"],function(fet)
+				if fet.Name ~= "SourceFolder" then
+					game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("TargetEnemy",fet.Name)
+				end
+		        end)
+		end)
+	end
+end)
 
-T1:Toggle("Auto damage to Armored Snowman [ Frosty Peaks ]",false,function(value)
+T10:Toggle("Auto damage to Armored Snowman",false,function(value)
     _G.asfp = value
     task.spawn(function()
 	if self.PlayerGui.ScreenGui.Region.Frame.Label.Text ~= "Frosty Peaks" then
