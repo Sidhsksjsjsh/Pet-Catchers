@@ -11,12 +11,17 @@ local T7 = wndw:Tab("Items")
 local T8 = wndw:Tab("Config")
 local T9 = wndw:Tab("Crafting")
 local T10 = wndw:Tab("Attack")
-
+local T11 = wndw:Tab("Alert")
 
 local self = game.Players.LocalPlayer
 local crabInstance = ""
 local grav = workspace.Gravity
-
+local alert = Instance.new("Sound")
+alert.SoundId = "rbxassetid://216917652"
+alert.Parent = game:GetService("SoundService")
+alert.Name = "Notify Sound"
+--alert:Play()
+		
 local amount = {
     berry = 4115,
     craft = 1
@@ -43,6 +48,8 @@ local shrine = {}
 local mounts = {}
 local items = {}
 
+local rarity = "Common"
+		
 lib:AddTable(workspace.Activations,act)
 lib:AddTable(game:GetService("ReplicatedStorage").Assets.WorldMap,wo)
 lib:AddTable(workspace.Upgrades,upg)
@@ -230,11 +237,13 @@ T10:Toggle("Auto damage to all enemies",false,function(value)
     while wait() do
         if _G.allwo == false then break end
 		childAsync(workspace["Markers"]["Enemies"],function(track)
-			childAsync(track["Default"],function(fet)
-				if fet.Name ~= "SourceFolder" then
-					game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("TargetEnemy",fet.Name)
-				end
-		        end)
+			if track:FindFirstChild("Default") or v.Name == "Default" then
+				childAsync(track["Default"],function(fet)
+					if fet.Name ~= "SourceFolder" then
+						game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("TargetEnemy",fet.Name)
+				        end
+		                end)
+			end
 		end)
 	end
 end)
@@ -434,6 +443,34 @@ T8:Toggle("Set hoverboard config",false,function(value)
     _G.treat = value
 end)
 
+T11:Dropdown("Select alert rarity",{"Common","Rare","Epic","Legendary"},function(value)
+    rarity = value
+end)
+
+T11:Dropdown("Select alert type",{"Bottom","Center & Big"},function(value)
+	_G.typealert = value
+end)
+
+T11:Textbox("Insert alert sound",false,function(value)
+    alert.SoundId = value
+end)
+
+T11:Toggle("Enable alert",false,function(value)
+    _G.sys_alert = value
+end)
+--alert:Play()
+T11:Button("Test alert",function()
+    if _G.typealert == "Bottom" then
+	lib:notify("The alert will be like this",10)
+    else
+	lib:WarnUser("The alert will be like this")
+    end
+end)
+
+T11:Button("Test sound",function()
+	alert:Play()
+end)
+		
 --TreatsInstance.berry
 --[[
 local args = {
@@ -461,6 +498,20 @@ end)
 
 self.PlayerGui.ScreenGui.Region.Frame.Label:GetPropertyChangedSignal("Text"):Connect(function()
 	lib:notify("Entering " .. self.PlayerGui.ScreenGui.Region.Frame.Label.Text,10)
+end)
+		
+self.PlayerGui.ScreenGui.Received.ChildAdded:Connect(function(i)
+	if i.Label:IsA("TextLabel") and _G.sys_alert == true then
+		childAsync(i.Label,function(get)
+			if get.Name == rarity then
+				if _G.typealert == "Bottom" then
+					lib:notify("Congratulation! You got " .. i.Label.Text,10)
+				else
+					lib:WarnUser("Congratulation! You got " .. i.Label.Text)
+				end
+			end
+		end)
+	end
 end)
 -- BREAK
 end)
