@@ -458,6 +458,11 @@ self:GetAttributeChangedSignal("Mount"):Connect(function()
 		self:SetAttribute("Mount",config.mount .. "/Default")
 	end
 end)
+
+self.PlayerGui.ScreenGui.Region.Frame.Label:GetPropertyChangedSignal("Text"):Connect(function()
+	lib:notify("Entering " .. self.PlayerGui.ScreenGui.Region.Frame.Label.Text,10)
+end)
+-- BREAK
 end)
 
 if not isload and self.Name == "Rivanda_Cheater" then
