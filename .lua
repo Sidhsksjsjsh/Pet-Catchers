@@ -493,6 +493,7 @@ end)
 self:GetAttributeChangedSignal("Mount"):Connect(function()
 	if _G.treat == true then
 		self:SetAttribute("Mount",config.mount .. "/Default")
+		lib:notify("Successfully sets the mount config to " .. lib:ColorFonts(config.mount,"Green"),10)
 	end
 end)
 
@@ -506,8 +507,10 @@ self.PlayerGui.ScreenGui.Received.ChildAdded:Connect(function(i)
 			if get.Name == rarity then
 				if _G.typealert == "Bottom" then
 					lib:notify("Congratulation! You got " .. i.Label.Text,10)
+					alert:Play()
 				else
 					lib:WarnUser("Congratulation! You got " .. i.Label.Text)
+					alert:Play()
 				end
 			end
 		end)
