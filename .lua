@@ -1,5 +1,5 @@
 local lib = loadstring(game:HttpGet("https://raw.githubusercontent.com/Sidhsksjsjsh/VAPE-UI-MODDED/main/.lua"))()
-local wndw = lib:Window("VIP Turtle Hub V4 - Fast update, better feature")
+local wndw = lib:Window("VIP Turtle Hub V4 - NEVER GIVE UP, GOD IS ALWAYS BESIDE U")
 local T1 = wndw:Tab("Main")
 local T2 = wndw:Tab("Shop")
 local T3 = wndw:Tab("Boss")
@@ -32,7 +32,7 @@ local boss = {
 -- pets._self.pos = 
 -- pets._self.rarity = 
 local workspace = game:GetService("Workspace")
-local wo = {"The Blackmarket"}
+local wo = {"The Blackmarket","The Summit"}
 local act = {}
 local upg = {}
 local egg = {}
@@ -233,6 +233,8 @@ end)
 T4:Button("Teleport",function()
 	if _G.TpWorld == "The Blackmarket" then
 		game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("TeleportBeacon","Magma Basin","The Blackmarket")
+	elseif _G.TpWorld == "The Summit" then
+		game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("TeleportBeacon","Magma Basin","The Summit")
 	else
 		game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("TeleportBeacon",_G.TpWorld,"Spawn")
 	end
@@ -271,7 +273,7 @@ T3:Toggle("Auto respawn boss",false,function(value)
 		end
 end)
 
-T3:Toggle("Auto safe place [ only work in kraken boss ]",false,function(value)
+T3:Toggle("Auto to safe place [ only work in kraken boss ]",false,function(value)
 	_G.safezone = value
 	if value then
 		workspace.Gravity = 0
@@ -282,6 +284,21 @@ T3:Toggle("Auto safe place [ only work in kraken boss ]",false,function(value)
 		while wait() do
 			if _G.safezone == false then break end
 				self.Character.HumanoidRootPart.Position = Vector3.new(1176,85,337)
+		end
+end)
+
+T3:Toggle("Auto deal damage to rendered boss",false,function(value)
+	_G.damage = value
+		while wait() do
+			if _G.damage == false then break end
+			childAsync(workspace.Rendered.Enemies,function(childAsync)
+				if childAsync then
+					game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("TargetEnemy",childAsync.Name)
+				else
+					lib:WarnUser(lib:ColorFonts("Vanguard NPC Detection","Red") .. "\nNo boss are detected\nGo spawn 1 boss before enabling this feature.")
+					break
+				end
+			end)
 		end
 end)
 
@@ -319,6 +336,8 @@ T5:Button("Start fishing",function()
 	Fishing("Gloomy Grotto",Vector3.new(1545.80615234375,49.098777770996094,-94.8126220703125))
     elseif _G.fishworld == "Magma Basin" then
 	Fishing("Magma Basin",Vector3.new(1260.465576171875,183.92877197265625,-435.5975646972656))
+    else
+	lib:WarnUser("Oops, this region is unavailable\ntry select another region.")
     end
 end)
 
@@ -337,16 +356,6 @@ end)
 
 T5:Button("Stop fishing",function()
     game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("StopFishing")
-end)
-
-T5:Button("Fishing all region",function()
-	Fishing("Pet Park",Vector3.new(1138.7437744140625,9.686546325683594,1633.845703125))
-	Fishing("Mellow Meadows",Vector3.new(874.0309448242188,21.719955444335938,1490.1602783203125))
-	Fishing("Auburn Woods",Vector3.new(716.324462890625,21.719636917114258,1150.069091796875))
-	Fishing("Frosty Peaks",Vector3.new(977.94580078125,37.48805618286133,719.7373657226562))
-	Fishing("Sunset Shores",Vector3.new(1319.7314453125,37.488059997558594,621.930419921875))
-	Fishing("Dusty Dunes",Vector3.new(1842.6231689453125,49.098777770996094,105.9592056274414))
-	Fishing("Gloomy Grotto",Vector3.new(1545.80615234375,49.098777770996094,-94.8126220703125))
 end)
 
 T6:Toggle("Auto dig",false,function(value)
@@ -395,6 +404,7 @@ end)
 
 T8:Toggle("Set hoverboard config",false,function(value)
     _G.treat = value
+    lib:WarnUser(":5817: attempt to index nil with 'ServerStorage'")
 end)
 
 --TreatsInstance.berry
