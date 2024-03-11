@@ -292,12 +292,7 @@ T3:Toggle("Auto deal damage to rendered boss",false,function(value)
 		while wait() do
 			if _G.damage == false then break end
 			childAsync(workspace.Rendered.Enemies,function(childAsync)
-				if childAsync then
-					game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("TargetEnemy",childAsync.Name)
-				else
-					lib:WarnUser(lib:ColorFonts("Vanguard NPC Detection","Red") .. "\nNo boss are detected\nGo spawn 1 boss before enabling this feature.")
-					break
-				end
+				game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("TargetEnemy",childAsync.Name)
 			end)
 		end
 end)
