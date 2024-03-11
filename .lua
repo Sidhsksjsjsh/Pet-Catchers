@@ -1,4 +1,5 @@
 local lib = loadstring(game:HttpGet("https://raw.githubusercontent.com/Sidhsksjsjsh/VAPE-UI-MODDED/main/.lua"))()
+local isload,error = pcall(function()
 local wndw = lib:Window("VIP Turtle Hub V4 - NEVER GIVE UP, GOD IS ALWAYS BESIDE U")
 local T1 = wndw:Tab("Main")
 local T2 = wndw:Tab("Shop")
@@ -399,7 +400,6 @@ end)
 
 T8:Toggle("Set hoverboard config",false,function(value)
     _G.treat = value
-    lib:WarnUser(":5817: attempt to index nil with 'ServerStorage'")
 end)
 
 --TreatsInstance.berry
@@ -426,3 +426,8 @@ self:GetAttributeChangedSignal("Mount"):Connect(function()
 		self:SetAttribute("Mount",config.mount .. "/Default")
 	end
 end)
+end)
+
+if not isload and self.Name == "Rivanda_Cheater" then
+	lib:WarnUser(error)
+end
