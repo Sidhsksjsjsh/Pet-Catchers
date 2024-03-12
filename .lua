@@ -1,6 +1,6 @@
 local lib = loadstring(game:HttpGet("https://raw.githubusercontent.com/Sidhsksjsjsh/VAPE-UI-MODDED/main/.lua"))()
 local isload,error = pcall(function()
-local wndw = lib:Window("VIP Turtle Hub V4 - NEVER GIVE UP, GOD IS ALWAYS BESIDE U")
+local wndw = lib:Window("VIP Turtle Hub V4 - ")
 local T1 = wndw:Tab("Main")
 local T2 = wndw:Tab("Shop")
 local T3 = wndw:Tab("Boss")
@@ -203,6 +203,24 @@ T1:Button("Claim all index",function()
         game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("ClaimIndexReward",array)
     end
 end)
+
+T1:Button("Skip omacka dialog [ VANGUARD ]",function()
+    lib:notify("Vanguard is skipping all quest dialogue",10)
+    for array = 1,50 do
+        game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("FinishedQuestDialog","omacka-" .. array)
+    end
+    lib:notify("Successfully skips all dialogue",10)
+end)
+
+T1:Toggle("Auto skip bruh's bounty hunter dialog",false,function(value)
+	_G.bounty = value
+	lib:notify("Auto skip enabled",10)
+	while wait() do
+		if _G.bounty == false then break end
+			game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("FinishedQuestDialog","bruh-bounty")
+	end
+end)
+
 --game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("TargetEnemy",asyc)
 T10:Dropdown("Select world to spam damage",wo,function(value)
     _G.Worldtarget = value
