@@ -522,11 +522,7 @@ end)
 
 --alert:Play()
 T11:Button("Test alert",function()
-    if _G.typealert == "Bottom" then
-	lib:notify("The alert will be like this",10)
-    else
-	lib:WarnUser("The alert will be like this")
-    end
+    AlertSystem("The alert will be like this")
 end)
 
 T11:Button("Test sound",function()
