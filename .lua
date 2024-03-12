@@ -12,7 +12,8 @@ local T8 = wndw:Tab("Config")
 local T9 = wndw:Tab("Crafting")
 local T10 = wndw:Tab("Attack")
 local T11 = wndw:Tab("Alert")
-
+		
+local TweenService = game:GetService("TweenService")
 local self = game.Players.LocalPlayer
 local crabInstance = ""
 local grav = workspace.Gravity
@@ -23,7 +24,7 @@ alert.Name = "Notify Sound"
 --alert:Play()
 
 local bosspos = {
-	["slime"] = {
+	["slime-boss"] = {
 		["vector"] = {Vector3.new(489,64,1471),Vector3.new(501,83,1450)},
 		["cframe"] = {CFrame.new(489,64,1471),CFrame.new(501,83,1450)}
 	},
@@ -33,6 +34,32 @@ local bosspos = {
 	}
 }
 -- bosspos["the-kraken"]["vector"][1]
+local nottype = "Bottom"
+
+local function AlertSystem(str)
+	if nottype == "Bottom" then
+		lib:notify(str,20)
+	else
+		lib:WarnUser(str)
+	end
+end
+		
+local function tween(name,random)
+	if random == true then
+		if name == "the-kraken" then
+			TweenService:Create(self.Character.HumanoidRootPart,TweenInfo.new(1,Enum.EasingStyle.Linear,Enum.EasingDirection.Out,0,false,0),{CFrame = bosspos["the-kraken"]["cframe"][math.random(1,2)]}):Play()
+		elseif name == "slime-boss" then
+			TweenService:Create(self.Character.HumanoidRootPart,TweenInfo.new(1,Enum.EasingStyle.Linear,Enum.EasingDirection.Out,0,false,0),{CFrame = bosspos["slime-boss"]["cframe"][math.random(1,2)]}):Play()
+		end
+	else
+		if name == "the-kraken" then
+			TweenService:Create(self.Character.HumanoidRootPart,TweenInfo.new(1,Enum.EasingStyle.Linear,Enum.EasingDirection.Out,0,false,0),{CFrame = bosspos["the-kraken"]["cframe"][1]}):Play()
+		elseif name == "slime-boss" then
+			TweenService:Create(self.Character.HumanoidRootPart,TweenInfo.new(1,Enum.EasingStyle.Linear,Enum.EasingDirection.Out,0,false,0),{CFrame = bosspos["slime-boss"]["cframe"][1]}):Play()
+		end
+	end
+end
+		
 local amount = {
     berry = 4115,
     craft = 1
@@ -344,7 +371,7 @@ T3:Toggle("Auto respawn boss",false,function(value)
 		end
 end)
 
-T3:Toggle("Auto to safe place [ only work in kraken boss ]",false,function(value)
+T3:Toggle("Auto tp to safe place",false,function(value)
 	_G.safezone = value
 	if value then
 		workspace.Gravity = 0
@@ -354,7 +381,7 @@ T3:Toggle("Auto to safe place [ only work in kraken boss ]",false,function(value
 
 		while wait() do
 			if _G.safezone == false then break end
-				self.Character.HumanoidRootPart.Position = Vector3.new(1176,85,337)
+				tween(boss.name,true)
 		end
 end)
 
@@ -381,7 +408,8 @@ local args = {
 game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer(unpack(args))
 ]]
 
-T5:Dropdown("Select world to start fishing",{"Pet Park","Mellow Meadows","Auburn Woods","Frosty Peaks","Sunset Shores","Dusty Dunes","Gloomy Grotto","Magma Basin"},function(value)
+--T5:Dropdown("Select world to start fishing",{"Pet Park","Mellow Meadows","Auburn Woods","Frosty Peaks","Sunset Shores","Dusty Dunes","Gloomy Grotto","Magma Basin"},function(value)
+T5:Dropdown("Select world to start fishing",wo,function(value)
     _G.fishworld = value
 end)
 
@@ -400,10 +428,10 @@ T5:Button("Start fishing",function()
         Fishing("Dusty Dunes",Vector3.new(1842.6231689453125,49.098777770996094,105.9592056274414))
     elseif _G.fishworld == "Gloomy Grotto" then
 	Fishing("Gloomy Grotto",Vector3.new(1545.80615234375,49.098777770996094,-94.8126220703125))
-    elseif _G.fishworld == "Magma Basin" then
+    elseif _G.fishworld == "Magma Basin" or _G.fishworld == "The Summit" then
 	Fishing("Magma Basin",Vector3.new(1260.465576171875,183.92877197265625,-435.5975646972656))
     else
-	lib:WarnUser("Oops, this region is unavailable\ntry select another region.")
+	AlertSystem("Oops, this region is unavailable. try select another region.")
     end
 end)
 
@@ -477,7 +505,7 @@ T11:Dropdown("Select alert rarity",{"Common","Rare","Epic","Legendary"},function
 end)
 
 T11:Dropdown("Select alert type",{"Bottom","Center & Big"},function(value)
-	_G.typealert = value
+	nottype = value
 end)
 
 T11:Textbox("Insert alert sound",false,function(value)
@@ -532,20 +560,22 @@ self:GetAttributeChangedSignal("Mount"):Connect(function()
 end)
 
 self.PlayerGui.ScreenGui.Region.Frame.Label:GetPropertyChangedSignal("Text"):Connect(function()
-	lib:notify("Entering " .. self.PlayerGui.ScreenGui.Region.Frame.Label.Text,10)
+	lib:notify("Now entering " .. self.PlayerGui.ScreenGui.Region.Frame.Label.Text,10)
 end)
 		
 self.PlayerGui.ScreenGui.Received.ChildAdded:Connect(function(i)
 	if i.Label:IsA("TextLabel") and _G.sys_alert == true then
 		childAsync(i.Label,function(get)
 			if get.Name == rarity then
-				if _G.typealert == "Bottom" then
+				AlertSystem("Congratulation! You got " .. i.Label.Text)
+				alert:Play()
+				--[[if _G.typealert == "Bottom" then
 					lib:notify("Congratulation! You got " .. i.Label.Text,10)
 					alert:Play()
 				else
 					lib:WarnUser("Congratulation! You got " .. i.Label.Text)
 					alert:Play()
-				end
+				end]]
 			end
 		end)
 	end
@@ -553,25 +583,29 @@ end)
 --0 /
 self.PlayerGui.ScreenGui.BossHUD.Healthbar.Health:GetPropertyChangedSignal("Text"):Connect(function()
 	if self.PlayerGui.ScreenGui.BossHUD.Healthbar.Health.Text:sub(1,3) == "0 /" or self.PlayerGui.ScreenGui.BossHUD.Healthbar.Health.Text:sub(1,2) == "0/" and _G.boss_alert == true then
-		if _G.typealert == "Bottom" then
+		AlertSystem("Congrats! You defeated " .. lib:ColorFonts(self.PlayerGui.ScreenGui.BossHUD.Healthbar.DisplayName.Text,"Red"))
+		alert:Play()
+		--[[if _G.typealert == "Bottom" then
 			lib:notify("Congrats! You defeated " .. lib:ColorFonts(self.PlayerGui.ScreenGui.BossHUD.Healthbar.DisplayName.Text,"Red"),10)
 			alert:Play()
 		else
 			lib:WarnUser("Congrats! You defeated " .. lib:ColorFonts(self.PlayerGui.ScreenGui.BossHUD.Healthbar.DisplayName.Text,"Red"))
 			alert:Play()
-		end
+		end]]
 	end
 end)
 
 self.PlayerGui.ScreenGui.BossHUD.Healthbar.DisplayName:GetPropertyChangedSignal("Text"):Connect(function()
 	if _G.boss_alert == true then
-		if _G.typealert == "Bottom" then
+		AlertSystem(lib:ColorFonts(self.PlayerGui.ScreenGui.BossHUD.Healthbar.DisplayName.Text,"Red") .. " has appeared! Be careful to defeat him.")
+		alert:Play()
+		--[[if _G.typealert == "Bottom" then
 			lib:notify(lib:ColorFonts(self.PlayerGui.ScreenGui.BossHUD.Healthbar.DisplayName.Text,"Red") .. " has appeared! Be careful to defeat him.",10)
 			alert:Play()
 		else
 			lib:WarnUser(lib:ColorFonts(self.PlayerGui.ScreenGui.BossHUD.Healthbar.DisplayName.Text,"Red") .. " has appeared! Be careful to defeat him.")
 			alert:Play()
-		end
+		end]]
 	end
 end)
 -- BREAK
