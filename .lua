@@ -1,6 +1,6 @@
 local lib = loadstring(game:HttpGet("https://raw.githubusercontent.com/Sidhsksjsjsh/VAPE-UI-MODDED/main/.lua"))()
 local isload,error = pcall(function()
-local wndw = lib:Window("VIP Turtle Hub V4 - ")
+local wndw = lib:Window("VIP Turtle Hub V4 - :(")
 local T1 = wndw:Tab("Main")
 local T2 = wndw:Tab("Shop")
 local T3 = wndw:Tab("Boss")
@@ -476,6 +476,11 @@ end)
 T11:Toggle("Enable alert",false,function(value)
     _G.sys_alert = value
 end)
+
+T11:Toggle("Enable boss defeated alert",false,function(value)
+    _G.boss_alert = value
+end)
+
 --alert:Play()
 T11:Button("Test alert",function()
     if _G.typealert == "Bottom" then
@@ -532,6 +537,30 @@ self.PlayerGui.ScreenGui.Received.ChildAdded:Connect(function(i)
 				end
 			end
 		end)
+	end
+end)
+--0 /
+self.PlayerGui.ScreenGui.BossHUD.Healthbar.Health:GetPropertyChangedSignal("Text"):Connect(function()
+	if self.PlayerGui.ScreenGui.BossHUD.Healthbar.Health:sub(1,3) == "0 /" or self.PlayerGui.ScreenGui.BossHUD.Healthbar.Health:sub(1,2) == "0/" and _G.boss_alert == true then
+		if _G.typealert == "Bottom" then
+			lib:notify("Congrats! You defeated " .. lib:ColorFonts(self.PlayerGui.ScreenGui.BossHUD.Healthbar.DisplayName.Text,"Red"),10)
+			alert:Play()
+		else
+			lib:WarnUser("Congrats! You defeated " .. lib:ColorFonts(self.PlayerGui.ScreenGui.BossHUD.Healthbar.DisplayName.Text,"Red"))
+			alert:Play()
+		end
+	end
+end)
+
+self.PlayerGui.ScreenGui.BossHUD.Healthbar.DisplayName:GetPropertyChangedSignal("Text"):Connect(function()
+	if _G.boss_alert == true then
+		if _G.typealert == "Bottom" then
+			lib:notify(lib:ColorFonts(self.PlayerGui.ScreenGui.BossHUD.Healthbar.DisplayName.Text,"Red") .. " has appeared! Be careful to defeat him.",10)
+			alert:Play()
+		else
+			lib:WarnUser(lib:ColorFonts(self.PlayerGui.ScreenGui.BossHUD.Healthbar.DisplayName.Text,"Red") .. " has appeared! Be careful to defeat him.")
+			alert:Play()
+		end
 	end
 end)
 -- BREAK
