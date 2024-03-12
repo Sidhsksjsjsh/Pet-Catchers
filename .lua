@@ -38,7 +38,7 @@ local nottype = "Bottom"
 
 local function AlertSystem(str)
 	if nottype == "Bottom" then
-		lib:notify(str,20)
+		lib:notify(str,10)
 	else
 		lib:WarnUser(str)
 	end
@@ -48,13 +48,13 @@ local function tween(name,random)
 	if random == true then
 		if name == "the-kraken" then
 			TweenService:Create(self.Character.HumanoidRootPart,TweenInfo.new(1,Enum.EasingStyle.Linear,Enum.EasingDirection.Out,0,false,0),{CFrame = bosspos["the-kraken"]["cframe"][math.random(1,2)]}):Play()
-		elseif name == "slime-boss" then
+		elseif name == "king-slime" then
 			TweenService:Create(self.Character.HumanoidRootPart,TweenInfo.new(1,Enum.EasingStyle.Linear,Enum.EasingDirection.Out,0,false,0),{CFrame = bosspos["slime-boss"]["cframe"][math.random(1,2)]}):Play()
 		end
 	else
 		if name == "the-kraken" then
 			TweenService:Create(self.Character.HumanoidRootPart,TweenInfo.new(1,Enum.EasingStyle.Linear,Enum.EasingDirection.Out,0,false,0),{CFrame = bosspos["the-kraken"]["cframe"][1]}):Play()
-		elseif name == "slime-boss" then
+		elseif name == "king-slime" then
 			TweenService:Create(self.Character.HumanoidRootPart,TweenInfo.new(1,Enum.EasingStyle.Linear,Enum.EasingDirection.Out,0,false,0),{CFrame = bosspos["slime-boss"]["cframe"][1]}):Play()
 		end
 	end
