@@ -541,7 +541,7 @@ self.PlayerGui.ScreenGui.Received.ChildAdded:Connect(function(i)
 end)
 --0 /
 self.PlayerGui.ScreenGui.BossHUD.Healthbar.Health:GetPropertyChangedSignal("Text"):Connect(function()
-	if self.PlayerGui.ScreenGui.BossHUD.Healthbar.Health:sub(1,3) == "0 /" or self.PlayerGui.ScreenGui.BossHUD.Healthbar.Health:sub(1,2) == "0/" and _G.boss_alert == true then
+	if self.PlayerGui.ScreenGui.BossHUD.Healthbar.Health.Text:sub(1,3) == "0 /" or self.PlayerGui.ScreenGui.BossHUD.Healthbar.Health.Text:sub(1,2) == "0/" and _G.boss_alert == true then
 		if _G.typealert == "Bottom" then
 			lib:notify("Congrats! You defeated " .. lib:ColorFonts(self.PlayerGui.ScreenGui.BossHUD.Healthbar.DisplayName.Text,"Red"),10)
 			alert:Play()
