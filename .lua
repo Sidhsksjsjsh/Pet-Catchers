@@ -21,7 +21,18 @@ alert.SoundId = "rbxassetid://216917652"
 alert.Parent = game:GetService("SoundService")
 alert.Name = "Notify Sound"
 --alert:Play()
-		
+
+local bosspos = {
+	["slime"] = {
+		["vector"] = {Vector3.new(489,64,1471),Vector3.new(501,83,1450)},
+		["cframe"] = {CFrame.new(489,64,1471),CFrame.new(501,83,1450)}
+	},
+	["the-kraken"] = {
+		["vector"] = {Vector3.new(1176,85,337),Vector3.new(1212,109,330)},
+		["cframe"] = {CFrame.new(1176,85,337),CFrame.new(1212,109,330)}
+	}
+}
+-- bosspos["the-kraken"]["vector"][1]
 local amount = {
     berry = 4115,
     craft = 1
