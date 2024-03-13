@@ -12,6 +12,8 @@ local T8 = wndw:Tab("Config")
 local T9 = wndw:Tab("Crafting")
 local T10 = wndw:Tab("Attack")
 local T11 = wndw:Tab("Alert")
+local T12 = wndw:Tab("Server")
+
 		
 local TweenService = game:GetService("TweenService")
 local self = game.Players.LocalPlayer
@@ -75,8 +77,16 @@ local boss = {
 	table = {}
 }
 
--- pets._self.pos = 
--- pets._self.rarity = 
+local function RejoinServerScript()
+    if #game.Players:GetPlayers() <= 1 then
+	AlertSystem("Rejoining")
+        wait()
+        game:GetService('TeleportService'):Teleport(game.PlaceId,self)
+    else
+        game:GetService('TeleportService'):TeleportToPlaceInstance(game.PlaceId,game.JobId,self)
+    end
+end
+
 local workspace = game:GetService("Workspace")
 local wo = {"The Blackmarket","The Summit"}
 local act = {}
@@ -528,7 +538,10 @@ end)
 T11:Button("Test sound",function()
 	alert:Play()
 end)
-		
+
+T12:Button("Rejoin server",function()
+    RejoinServerScript()
+end)
 --TreatsInstance.berry
 --[[
 local args = {
