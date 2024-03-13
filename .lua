@@ -395,7 +395,7 @@ T3:Toggle("Auto tp to safe place",false,function(value)
 				if self.Character then
 					tween(boss.name,true)
 				else
-					AlertSystem(lib:ColorFonts("runtime error : Failed to find Character in line 4972","Red"))
+					lib:notify(lib:ColorFonts("runtime error : Failed to find Character in line 4972","Red"),10)
 				end
 		end
 end)
@@ -624,7 +624,7 @@ self.PlayerGui.ScreenGui.BossHUD.Healthbar.DisplayName:GetPropertyChangedSignal(
 end)
 
 workspace:GetPropertyChangedSignal("Gravity"):Connect(function()
-	AlertSystem("Gravity changed to " .. lib:ColorFonts(workspace.Gravity,"Green"))
+	lib:notify("Gravity changed to " .. lib:ColorFonts(workspace.Gravity,"Green"),10)
 end)
 -- BREAK
 end)
