@@ -252,12 +252,12 @@ T1:Button("Claim all index",function()
     end
 end)
 
-T1:Button("Skip omacka dialog [ VANGUARD ]",function()
-    lib:notify("Vanguard is skipping all quest dialogue",10)
+T1:Button("Skip omacka's dialog [ VANGUARD ]",function()
+    lib:notify("Vanguard is skipping all quest dialog",10)
     for array = 1,50 do
         game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("FinishedQuestDialog","omacka-" .. array)
     end
-    lib:notify("Successfully skips all dialogue",10)
+    lib:notify("Successfully skips all dialog",10)
 end)
 
 T1:Toggle("Auto skip bruh's bounty hunter dialog",false,function(value)
@@ -385,13 +385,18 @@ T3:Toggle("Auto tp to safe place",false,function(value)
 	_G.safezone = value
 	if value then
 		workspace.Gravity = 0
+		--AlertSystem("Gravity changed to " .. lib:ColorFonts(workspace.Gravity,"Red"))
 	else
 		workspace.Gravity = grav
 	end
 
 		while wait() do
 			if _G.safezone == false then break end
-				tween(boss.name,true)
+				if self.Character then
+					tween(boss.name,true)
+				else
+					AlertSystem(lib:ColorFonts("runtime error : Failed to find Character in line 4972","Red"))
+				end
 		end
 end)
 
@@ -616,6 +621,10 @@ self.PlayerGui.ScreenGui.BossHUD.Healthbar.DisplayName:GetPropertyChangedSignal(
 			alert:Play()
 		end]]
 	end
+end)
+
+workspace:GetPropertyChangedSignal("Gravity"):Connect(function()
+	AlertSystem("Gravity changed to " .. lib:ColorFonts(workspace.Gravity,"Green"))
 end)
 -- BREAK
 end)
