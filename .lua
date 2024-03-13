@@ -396,6 +396,7 @@ T3:Toggle("Auto tp to safe place",false,function(value)
 					tween(boss.name,true)
 				else
 					lib:notify(lib:ColorFonts("runtime error : Failed to find Character in line 4972","Red"),10)
+					_G.safezone = false
 				end
 		end
 end)
