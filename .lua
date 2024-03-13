@@ -626,6 +626,10 @@ end)
 workspace:GetPropertyChangedSignal("Gravity"):Connect(function()
 	lib:notify("Gravity changed to " .. lib:ColorFonts(workspace.Gravity,"Green"),10)
 end)
+
+self.CharacterAdded:connect(function(chrAsync)
+	lib:notify(lib:ColorFonts("Respawned","Green"),10)
+end)
 -- BREAK
 end)
 
