@@ -83,6 +83,7 @@ local function RejoinServerScript()
         wait()
         game:GetService('TeleportService'):Teleport(game.PlaceId,self)
     else
+	AlertSystem("Rejoining")
         game:GetService('TeleportService'):TeleportToPlaceInstance(game.PlaceId,game.JobId,self)
     end
 end
@@ -107,6 +108,60 @@ lib:AddTable(game:GetService("ReplicatedStorage").Assets.Mounts,mounts)
 lib:AddTable(game:GetService("ReplicatedStorage").Assets.Items,items)
 lib:AddTable(workspace.Bosses,boss.table)
 
+local toggle = {
+	P1 = false,
+	P2 = false,
+	P3 = false,
+	P4 = false,
+	P5 = false,
+	P6 = false,
+	P7 = false,
+	P8 = false,
+	P9 = false,
+	P10 = false,
+	P11 = false,
+	P12 = false,
+	P13 = false,
+	P14 = false,
+	P15 = false,
+	P16 = false,
+	P17 = false,
+	P18 = false,
+	P19 = false,
+	P20 = false,
+	P21 = false,
+	P22 = false,
+	P23 = false,
+	boss = false,
+	alert = false,
+	B1 = "rare-cube",
+	B2 = 1,
+	B3 = "Common",
+	B4 = act[1],
+	B5 = wo[3],
+	B6 = wo[3],
+	B7 = wo[3],
+	B8 = items[1],
+	B9 = "",
+	B10 = "",
+	B11 = "",
+	B12 = "",
+	B13 = "",
+	B14 = "",
+	B15 = "",
+	B16 = "",
+	B17 = "",
+	B18 = "",
+	B19 = "",
+	B20 = "",
+	B21 = "",
+	B22 = "",
+	B23 = "",
+	B24 = "",
+	B25 = "",
+	B26 = ""
+} -- toggle.B1 
+
 T6:Label("this is for Ancient Dig minigames\nAncient Dig Minigame located in 'Dusty Dunes' world!")
 T9:Label("Sorry ill change it into dropdown cus i have no time to\nmake item list")
 
@@ -117,11 +172,11 @@ local function getmetachildren(str,funct)
 end
 
 T9:Textbox("Item name",false,function(value)
-    _G.craftitem = value
+    toggle.B1 = value
 end)
 
 T9:Dropdown("Select Crafting slot",{"1","2","3"},function(value)
-    _G.craftslot = tonumber(value)
+    toggle.B2 = tonumber(value)
 end)
 
 T9:Slider("Craft amount ( MAX 999 )",0,999,1,function(value)
@@ -129,7 +184,7 @@ T9:Slider("Craft amount ( MAX 999 )",0,999,1,function(value)
 end)
 
 T9:Button("Craft",function()
-    game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("StartCrafting",_G.craftslot,_G.craftitem,amount.craft)
+    game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("StartCrafting",toggle.B2,toggle.B1,amount.craft)
 end)
 
 T9:Button("Claim all crafting",function()
@@ -181,16 +236,16 @@ local function enemiesGetAsync(array,funct)
 end
 
 T1:Dropdown("Select catch rarities",{"Common","Rare","Epic","Legendary"},function(value)
-    _G.rarity = value
+    toggle.B3 = value
 end)
 
 T1:Toggle("Auto catch all pets",false,function(value)
-    _G.cpets = value
+    toggle.P1 = value
     while wait() do
-      if _G.cpets == false then break end
+      if toggle.P1 == false then break end
       for i,v in pairs(workspace["Rendered"]["Pets"]["World"]:GetChildren()) do
             if _G.cpets == true then
-                game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Function"]:InvokeServer("CapturePet",v.Name,_G.rarity)
+                game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Function"]:InvokeServer("CapturePet",v.Name,toggle.B3)
             end
       end
     end
@@ -198,39 +253,39 @@ end)
 
 if self.Name == "Rivanda_Cheater" then
 T1:Toggle("Auto catch [ Manual ID ]",false,function(value)
-    _G.manualver = value
+    toggle.P2 = value
     while wait() do
-      if _G.manualver == false then break end
-	game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Function"]:InvokeServer("CapturePet",crabInstance,_G.rarity)
+      if toggle.P2 == false then break end
+	game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Function"]:InvokeServer("CapturePet",crabInstance,toggle.B3)
     end
 end)
 end
 
 T2:Dropdown("Select shops",act,function(value)
-        _G.shop = value
+        toggle.B4 = value
 end)
 
 T2:Toggle("Auto buy item shop [ Item 1 ]",false,function(value)
-    _G.bitem1 = value
+    toggle.P3 = value
     while wait() do
-      if _G.bitem1 == false then break end
-      game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("BuyShopItem",_G.shop,1)
+      if toggle.P3 == false then break end
+      game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("BuyShopItem",toggle.B4,1)
     end
 end)
 
 T2:Toggle("Auto buy item shop [ Item 2 ]",false,function(value)
-    _G.bitem2 = value
+    toggle.P4 = value
     while wait() do
-      if _G.bitem2 == false then break end
-      game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("BuyShopItem",_G.shop,2)
+      if toggle.P4 == false then break end
+      game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("BuyShopItem",toggle.B4,2)
     end
 end)
 
 T2:Toggle("Auto buy item shop [ Item 3 ]",false,function(value)
-    _G.bitem3 = value
+    toggle.P5 = value
     while wait() do
-      if _G.bitem3 == false then break end
-      game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("BuyShopItem",_G.shop,3)
+      if toggle.P5 == false then break end
+      game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("BuyShopItem",toggle.B4,3)
     end
 end)
 
@@ -261,24 +316,24 @@ T1:Button("Skip omacka's dialog [ VANGUARD ]",function()
 end)
 
 T1:Toggle("Auto skip bruh's bounty hunter dialog",false,function(value)
-	_G.bounty = value
+	toggle.P6 = value
 	lib:notify("Auto skip enabled",10)
 	while wait() do
-		if _G.bounty == false then break end
+		if toggle.P6 == false then break end
 			game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("FinishedQuestDialog","bruh-bounty")
 	end
 end)
 
 --game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("TargetEnemy",asyc)
 T10:Dropdown("Select world to spam damage",wo,function(value)
-    _G.Worldtarget = value
+    toggle.B5 = value
 end)
 
 T10:Toggle("Auto damage to a selected world",false,function(value)
-    _G.selworld = value
+    toggle.P7 = value
     while wait() do
-        if _G.selworld == false then break end
-		childAsync(workspace["Markers"]["Enemies"][_G.Worldtarget]["Default"],function(fet)
+        if toggle.P7 == false then break end
+		childAsync(workspace["Markers"]["Enemies"][toggle.B5]["Default"],function(fet)
 			if fet.Name ~= "SourceFolder" then
 				game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("TargetEnemy",fet.Name)
 			end
@@ -287,9 +342,9 @@ T10:Toggle("Auto damage to a selected world",false,function(value)
 end)
 
 T10:Toggle("Auto damage to rendered enemies",false,function(value)
-    _G.mde = value
+    toggle.P8 = value
     while wait() do
-        if _G.mde == false then break end
+        if toggle.P9 == false then break end
 		childAsync(workspace["Markers"]["Enemies"][self.PlayerGui.ScreenGui.Region.Frame.Label.Text]["Default"],function(fet)
 			if fet.Name ~= "SourceFolder" then
 				game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("TargetEnemy",fet.Name)
@@ -299,9 +354,9 @@ T10:Toggle("Auto damage to rendered enemies",false,function(value)
 end)
 		
 T10:Toggle("Auto damage to all enemies",false,function(value)
-    _G.allwo = value
+    toggle.P10 = value
     while wait() do
-        if _G.allwo == false then break end
+        if toggle.P10 == false then break end
 		childAsync(workspace["Markers"]["Enemies"],function(track)
 			if track:FindFirstChild("Default") or v.Name == "Default" then
 				childAsync(track["Default"],function(fet)
@@ -315,7 +370,7 @@ T10:Toggle("Auto damage to all enemies",false,function(value)
 end)
 
 T10:Toggle("Auto damage to Armored Snowman",false,function(value)
-    _G.asfp = value
+    toggle.P11 = value
     task.spawn(function()
 	if self.PlayerGui.ScreenGui.Region.Frame.Label.Text ~= "Frosty Peaks" then
 		game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("RepairBeacon","Frosty Peaks","Spawn")
@@ -325,7 +380,7 @@ T10:Toggle("Auto damage to Armored Snowman",false,function(value)
     end)
 		
     while wait() do
-        if _G.asfp == false then break end
+        if toggle.P11 == false then break end
 		childAsync(workspace["Markers"]["Enemies"][self.PlayerGui.ScreenGui.Region.Frame.Label.Text]["Armored"],function(fet)
 			if fet.Name ~= "SourceFolder" then
 				game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("TargetEnemy",fet.Name)
@@ -335,13 +390,13 @@ T10:Toggle("Auto damage to Armored Snowman",false,function(value)
 end)
 
 T4:Dropdown("Select world",wo,function(value)
-    _G.TpWorld = value
+    toggle.B6 = value
 end)
 
 T4:Button("Teleport",function()
-	if _G.TpWorld == "The Blackmarket" then
+	if toggle.B6 == "The Blackmarket" then
 		game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("TeleportBeacon","Magma Basin","The Blackmarket")
-	elseif _G.TpWorld == "The Summit" then
+	elseif toggle.B6 == "The Summit" then
 		game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("TeleportBeacon","Magma Basin","The Summit")
 	else
 		game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("TeleportBeacon",_G.TpWorld,"Spawn")
@@ -374,37 +429,36 @@ T3:Button("Boss fight",function()
 end)
 
 T3:Toggle("Auto respawn boss",false,function(value)
-	_G.autoresboss = value
+	toggle.P12 = value
 		while wait() do
-			if _G.autoresboss == false then break end
+			if toggle.P12 == false then break end
 				game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("RespawnBoss",boss.name)
 		end
 end)
 
 T3:Toggle("Auto tp to safe place",false,function(value)
-	_G.safezone = value
+	toggle.P13 = value
 	if value then
 		workspace.Gravity = 0
-		--AlertSystem("Gravity changed to " .. lib:ColorFonts(workspace.Gravity,"Red"))
 	else
 		workspace.Gravity = grav
 	end
 
 		while wait() do
-			if _G.safezone == false then break end
+			if toggle.P13 == false then break end
 				if self.Character then
 					tween(boss.name,true)
 				else
 					lib:notify(lib:ColorFonts("runtime error : Failed to find Character in line 4972","Red"),10)
-					_G.safezone = false
+					toggle.P13 = false
 				end
 		end
 end)
 
 T3:Toggle("Auto deal damage to rendered boss",false,function(value)
-	_G.damage = value
+	toggle.P14 = value
 		while wait() do
-			if _G.damage == false then break end
+			if toggle.P14 == false then break end
 			childAsync(workspace.Rendered.Enemies,function(childAsync)
 				game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("TargetEnemy",childAsync.Name)
 			end)
@@ -426,25 +480,25 @@ game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]
 
 --T5:Dropdown("Select world to start fishing",{"Pet Park","Mellow Meadows","Auburn Woods","Frosty Peaks","Sunset Shores","Dusty Dunes","Gloomy Grotto","Magma Basin"},function(value)
 T5:Dropdown("Select world to start fishing",wo,function(value)
-    _G.fishworld = value
+    toggle.B7 = value
 end)
 
 T5:Button("Start fishing",function()
-    if _G.fishworld == "Pet Park" then
+    if toggle.B7 == "Pet Park" then
         Fishing("Pet Park",Vector3.new(1138.7437744140625,9.686546325683594,1633.845703125))
-    elseif _G.fishworld == "Mellow Meadows" then
+    elseif toggle.B7 == "Mellow Meadows" then
         Fishing("Mellow Meadows",Vector3.new(874.0309448242188,21.719955444335938,1490.1602783203125))
-    elseif _G.fishworld == "Auburn Woods" then
+    elseif toggle.B7 == "Auburn Woods" then
         Fishing("Auburn Woods",Vector3.new(716.324462890625,21.719636917114258,1150.069091796875))
-    elseif _G.fishworld == "Frosty Peaks" then
+    elseif toggle.B7 == "Frosty Peaks" then
         Fishing("Frosty Peaks",Vector3.new(977.94580078125,37.48805618286133,719.7373657226562))
-    elseif _G.fishworld == "Sunset Shores" then
+    elseif toggle.B7 == "Sunset Shores" then
         Fishing("Sunset Shores",Vector3.new(1319.7314453125,37.488059997558594,621.930419921875))
-    elseif _G.fishworld == "Dusty Dunes" then
+    elseif toggle.B7 == "Dusty Dunes" then
         Fishing("Dusty Dunes",Vector3.new(1842.6231689453125,49.098777770996094,105.9592056274414))
-    elseif _G.fishworld == "Gloomy Grotto" then
+    elseif toggle.B7 == "Gloomy Grotto" then
 	Fishing("Gloomy Grotto",Vector3.new(1545.80615234375,49.098777770996094,-94.8126220703125))
-    elseif _G.fishworld == "Magma Basin" or _G.fishworld == "The Summit" then
+    elseif toggle.B7 == "Magma Basin" or toggle.B7 == "The Summit" then
 	Fishing("Magma Basin",Vector3.new(1260.465576171875,183.92877197265625,-435.5975646972656))
     else
 	AlertSystem("Oops, this region is unavailable. try select another region.")
@@ -452,10 +506,10 @@ T5:Button("Start fishing",function()
 end)
 
 T5:Toggle("Auto cast every 4s",false,function(value)
-    _G.fish = value
+    toggle.P15 = value
     game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("StartCastFishing")
     while wait(4) do
-      if _G.fish == false then break end
+      if toggle.P15 == false then break end
       game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("StartCastFishing")
     end
 end)
@@ -469,9 +523,9 @@ T5:Button("Stop fishing",function()
 end)
 
 T6:Toggle("Auto dig",false,function(value)
-    _G.autDig = value
+    toggle.P16 = value
     while wait() do
-        if _G.autDig == false then break end
+        if toggle.P16 == false then break end
             tilesGetAsync(function(tilesAsync)
                 game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("TryMinigameInput",tilesAsync)
             end)
@@ -481,29 +535,29 @@ end)
 T6:Label("Auto play for dance-of coming soon\nthat minigames located in 'Gloomy Grotto'")
 
 T7:Dropdown("Select item",items,function(value)
-    _G.mystype = value
+    toggle.B8 = value
 end)
 
 T7:Toggle("Auto use/hatch selected item",false,function(value)
-    _G.autmys = value
+    toggle.P17 = value
     while wait() do
-        if _G.autmys == false then break end
-		if _G.mystype == "Elite Mystery Egg" then
+        if toggle.P17 == false then break end
+		if toggle.B8 == "Elite Mystery Egg" then
 			game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Function"]:InvokeServer("TryHatchEgg","Elite Mystery Egg")
-		elseif _G.mystype == "Mystery Egg" then
+		elseif toggle.B8 == "Mystery Egg" then
 			game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Function"]:InvokeServer("TryHatchEgg","Mystery Egg")
-		elseif _G.mystype == "Prismatic Mystery Egg" then
+		elseif toggle.B8 == "Prismatic Mystery Egg" then
 			game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Function"]:InvokeServer("TryHatchEgg","Prismatic Mystery Egg")
 		else
-			game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("UsePowerup",_G.mystype)
+			game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("UsePowerup",toggle.B8)
 		end
 	end
 end)
 
 T7:Toggle("Auto equip best pet",false,function(value)
-    _G.best = value
+    toggle.P18 = value
 	while wait() do
-		if _G.best == false then break end
+		if toggle.P18 == false then break end
 			game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("EquipBestPets")
 	end
 end)
@@ -513,7 +567,7 @@ T8:Dropdown("Select mount",mounts,function(value)
 end)
 
 T8:Toggle("Set hoverboard config",false,function(value)
-    _G.treat = value
+    toggle.P19 = value
 end)
 
 T11:Dropdown("Select alert rarity",{"Common","Rare","Epic","Legendary"},function(value)
@@ -529,11 +583,11 @@ T11:Textbox("Insert alert sound",false,function(value)
 end)
 
 T11:Toggle("Enable alert",false,function(value)
-    _G.sys_alert = value
+    toggle.alert = value
 end)
 
 T11:Toggle("Enable boss defeated alert",false,function(value)
-    _G.boss_alert = value
+    toggle.boss = value
 end)
 
 --alert:Play()
@@ -568,7 +622,7 @@ lib:HookFunction(function(method,received,args)
 end)
 
 self:GetAttributeChangedSignal("Mount"):Connect(function()
-	if _G.treat == true then
+	if toggle.P19 == true then
 		self:SetAttribute("Mount",config.mount .. "/Default")
 		lib:notify("Successfully sets the mount config to " .. lib:ColorFonts(config.mount,"Green"),10)
 	end
@@ -579,7 +633,7 @@ self.PlayerGui.ScreenGui.Region.Frame.Label:GetPropertyChangedSignal("Text"):Con
 end)
 		
 self.PlayerGui.ScreenGui.Received.ChildAdded:Connect(function(i)
-	if i.Label:IsA("TextLabel") and _G.sys_alert == true then
+	if i.Label:IsA("TextLabel") and toggle.alert == true then
 		childAsync(i.Label,function(get)
 			if get.Name == rarity then
 				AlertSystem("Congratulation! You got " .. i.Label.Text)
@@ -597,7 +651,7 @@ self.PlayerGui.ScreenGui.Received.ChildAdded:Connect(function(i)
 end)
 --0 /
 self.PlayerGui.ScreenGui.BossHUD.Healthbar.Health:GetPropertyChangedSignal("Text"):Connect(function()
-	if self.PlayerGui.ScreenGui.BossHUD.Healthbar.Health.Text:sub(1,3) == "0 /" or self.PlayerGui.ScreenGui.BossHUD.Healthbar.Health.Text:sub(1,2) == "0/" and _G.boss_alert == true then
+	if self.PlayerGui.ScreenGui.BossHUD.Healthbar.Health.Text:sub(1,3) == "0 /" or self.PlayerGui.ScreenGui.BossHUD.Healthbar.Health.Text:sub(1,2) == "0/" and toggle.boss == true then
 		AlertSystem("Congrats! You defeated " .. lib:ColorFonts(self.PlayerGui.ScreenGui.BossHUD.Healthbar.DisplayName.Text,"Red"))
 		alert:Play()
 		--[[if _G.typealert == "Bottom" then
@@ -611,8 +665,8 @@ self.PlayerGui.ScreenGui.BossHUD.Healthbar.Health:GetPropertyChangedSignal("Text
 end)
 
 self.PlayerGui.ScreenGui.BossHUD.Healthbar.DisplayName:GetPropertyChangedSignal("Text"):Connect(function()
-	if _G.boss_alert == true then
-		AlertSystem(lib:ColorFonts(self.PlayerGui.ScreenGui.BossHUD.Healthbar.DisplayName.Text,"Red") .. " has appeared! Be careful to defeat him.")
+	if toggle.boss == true then
+		AlertSystem(lib:ColorFonts(self.PlayerGui.ScreenGui.BossHUD.Healthbar.DisplayName.Text,"Red") .. " has appeared. Be careful to defeat him!")
 		alert:Play()
 		--[[if _G.typealert == "Bottom" then
 			lib:notify(lib:ColorFonts(self.PlayerGui.ScreenGui.BossHUD.Healthbar.DisplayName.Text,"Red") .. " has appeared! Be careful to defeat him.",10)
