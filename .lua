@@ -201,6 +201,7 @@ end)
 
 local function Fishing(str,pos)
     game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("StartFishing",str,pos)
+    lib:notify("You are currently fishing in the " .. str .. " zone",10)
 end
 
 local function childAsync(str,funct)
@@ -396,23 +397,29 @@ end)
 T4:Button("Teleport",function()
 	if toggle.B6 == "The Blackmarket" then
 		game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("TeleportBeacon","Magma Basin","The Blackmarket")
+		lib:notify("Now Entering 'The Blackmarket'",10)
 	elseif toggle.B6 == "The Summit" then
 		game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("TeleportBeacon","Magma Basin","The Summit")
+		lib:notify("Now Entering 'The Summit'",10)
 	else
 		game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("TeleportBeacon",_G.TpWorld,"Spawn")
 	end
 end)
 
 T4:Button("Repair all beacons",function()
+    lib:notify("Repairing all beacons...",10)
     for array = 1,#wo do
         game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("RepairBeacon",wo[array],"Spawn")
     end
+    lib:notify(lib:ColorFonts("Done","Green") .. "... total beacons repaired: " .. lib:ColorFonts(#wo,"Green"),10)
 end)
 
 T4:Button("Unlock regions",function()
+    lib:notify("Unlocking all regions",10)
     for array = 1,#wo do
         game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("UnlockRegion",wo[array])
     end
+    lib:notify(lib:ColorFonts("Done","Green"),10)
 end)
 
 T3:Dropdown("Select boss",boss.table,function(value)
@@ -426,6 +433,7 @@ end)
 --self.PlayerGui.LoadingGui.Enabled = false
 T3:Button("Boss fight",function()
     game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Function"]:InvokeServer("BossRequest",boss.name,boss.lvl)
+    lib:notify("Where is the boss? 😥😢",10)
 end)
 
 T3:Toggle("Auto respawn boss",false,function(value)
@@ -449,7 +457,7 @@ T3:Toggle("Auto tp to safe place",false,function(value)
 				if self.Character then
 					tween(boss.name,true)
 				else
-					lib:notify(lib:ColorFonts("runtime error : Failed to find Character in line 4972","Red"),10)
+					lib:notify(lib:ColorFonts("runtime error : Failed to find 'Character' in line 4972","Red"),10)
 					toggle.P13 = false
 				end
 		end
@@ -460,7 +468,12 @@ T3:Toggle("Auto deal damage to rendered boss",false,function(value)
 		while wait() do
 			if toggle.P14 == false then break end
 			childAsync(workspace.Rendered.Enemies,function(childAsync)
-				game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("TargetEnemy",childAsync.Name)
+				if childAsync then
+					game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("TargetEnemy",childAsync.Name)
+				else
+					lib:notify(lib:ColorFonts("No boss are detected","Red"),10)
+					toggle.P14 = false
+				end
 			end)
 		end
 end)
@@ -527,7 +540,11 @@ T6:Toggle("Auto dig",false,function(value)
     while wait() do
         if toggle.P16 == false then break end
             tilesGetAsync(function(tilesAsync)
-                game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("TryMinigameInput",tilesAsync)
+		if tilesAsync then
+			game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("TryMinigameInput",tilesAsync)
+		else
+			lib:notify(lib:ColorFonts("Cant find minigame tiles","Red"),10)
+		end
             end)
     end
 end)
@@ -629,14 +646,14 @@ self:GetAttributeChangedSignal("Mount"):Connect(function()
 end)
 
 self.PlayerGui.ScreenGui.Region.Frame.Label:GetPropertyChangedSignal("Text"):Connect(function()
-	lib:notify("Now entering " .. self.PlayerGui.ScreenGui.Region.Frame.Label.Text,10)
+	lib:notify("Now Entering '" .. self.PlayerGui.ScreenGui.Region.Frame.Label.Text .. "'",10)
 end)
 		
 self.PlayerGui.ScreenGui.Received.ChildAdded:Connect(function(i)
 	if i.Label:IsA("TextLabel") and toggle.alert == true then
 		childAsync(i.Label,function(get)
 			if get.Name == rarity then
-				AlertSystem("Congratulation! You got " .. i.Label.Text)
+				AlertSystem("Congratulation! You got '" .. i.Label.Text .. "'")
 				alert:Play()
 				--[[if _G.typealert == "Bottom" then
 					lib:notify("Congratulation! You got " .. i.Label.Text,10)
