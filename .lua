@@ -397,10 +397,8 @@ end)
 T4:Button("Teleport",function()
 	if toggle.B6 == "The Blackmarket" then
 		game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("TeleportBeacon","Magma Basin","The Blackmarket")
-		lib:notify("Now Entering 'The Blackmarket'",10)
 	elseif toggle.B6 == "The Summit" then
 		game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("TeleportBeacon","Magma Basin","The Summit")
-		lib:notify("Now Entering 'The Summit'",10)
 	else
 		game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("TeleportBeacon",_G.TpWorld,"Spawn")
 	end
