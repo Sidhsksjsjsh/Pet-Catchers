@@ -37,7 +37,20 @@ local bosspos = {
 }
 -- bosspos["the-kraken"]["vector"][1]
 local nottype = "Bottom"
-
+local misc = {
+	codes = {
+		"runes",
+		"void",
+		"update1",
+		"lucky",
+		"gravypet",
+		"russoplays",
+		"brite",
+		"Cherry",
+		"ilovefishing",
+		"Release"
+        }
+}
 local function AlertSystem(str)
 	if nottype == "Bottom" then
 		lib:notify(str,10)
@@ -325,6 +338,13 @@ T1:Toggle("Auto skip bruh's bounty hunter dialog",false,function(value)
 	end
 end)
 
+T1:Button("Redeem all codes",function()
+    for array = 1,#misc.codes do
+        game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Function"]:InvokeServer("RedeemCode",misc.codes[array])
+	lib:notify("Redeeming '" .. lib:ColorFonts(misc.codes[array],"Green") .. "' code.",10)
+    end
+end)
+		
 --game:GetService("ReplicatedStorage")["Shared"]["Framework"]["Network"]["Remote"]["Event"]:FireServer("TargetEnemy",asyc)
 T10:Dropdown("Select world to spam damage",wo,function(value)
     toggle.B5 = value
